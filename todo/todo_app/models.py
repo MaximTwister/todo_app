@@ -6,8 +6,13 @@ class TodoItem(models.Model):
     content = models.TextField(blank=False)
     creation_date = models.DateTimeField(auto_now_add=True)
     last_edit_date = models.DateTimeField(auto_now=True)
-    owner = models.ForeignKey("User", on_delete=models.SET_NULL, null=True, related_name="todo_items")
-    tags = models.ForeignKey("Tags", on_delete=models.SET_DEFAULT, default='todo', blank=False, related_name='tags')
+    owner = models.ForeignKey("User",
+                              on_delete=models.SET_NULL,
+                              null=True,
+                              related_name="todo_items")
+    tags = models.ManyToManyField("Tag",
+                                  blank=False,
+                                  related_name='todo_items')
 
     def __str__(self):
         return f"{self.owner} : {self.title}"
@@ -25,10 +30,8 @@ class User(models.Model):
         return f"{self.name} : {self.telegram_id}"
 
 
-class Tags(models.Model):
-    name = models.CharField(max_length=100, blank=False)
+class Tag(models.Model):
+    title = models.CharField(max_length=100, blank=False)
 
     def __str__(self):
-        return f'{self.name}'
-
-#   *TWISTER STUDIO 2021*
+        return f'{self.title}'
