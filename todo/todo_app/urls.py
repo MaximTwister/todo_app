@@ -1,5 +1,5 @@
 from django.urls import path
-import views
+from todo_app import views
 
 urlpatterns = [
     path('tags/', views.get_tags, name='get_tags')
