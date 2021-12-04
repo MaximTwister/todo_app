@@ -5,7 +5,7 @@ class TodoItem(models.Model):
     title = models.CharField(max_length=50, blank=False)
     content = models.TextField(blank=False)
     creation_date = models.DateTimeField(auto_now_add=True)
-    last_edit_day = models.DateTimeField(auto_now=True)
+    last_edit_date = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey('User',
                               on_delete=models.SET_NULL,
                               null=True,
@@ -32,7 +32,7 @@ class User(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=100, blank=False)
+    title = models.CharField(max_length=100, blank=False)
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.title}'

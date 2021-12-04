@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
-from todo_app.models import Tag, User, TodoItem
+from .models import Tag, User, TodoItem
 
 
 def get_tags(request: HttpRequest):
-    tags = Tag.objects.get()
+    tags = Tag.objects.all()
     context = {'tags': tags,
                'title': 'Tags list'
                }
@@ -12,7 +12,7 @@ def get_tags(request: HttpRequest):
 
 
 def get_users(request: HttpRequest):
-    users = User.objects.get()
+    users = User.objects.all()
     context = {'users': users,
                'title': 'Users list'
                }
@@ -20,10 +20,9 @@ def get_users(request: HttpRequest):
 
 
 def get_todoitems(request: HttpRequest):
-    todoitems = TodoItem.objects.get()
+    todoitems = TodoItem.objects.all()
     context = {'todoitems': todoitems,
                'title': 'TodoItems list'
                }
     return render(request, 'todo_app/todoitems.html', context=context)
-
 
