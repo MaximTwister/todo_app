@@ -1,0 +1,15 @@
+<div class="card text-center">
+  <div class="card-header">
+    Featured
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{ todoitem.title|title }}</h5>
+    <p class="card-text">{{ todoitem.content|truncatewords:15 }}</p>
+    <a href="#" class="btn btn-primary">Read Todo</a>
+  </div>
+  <div class="card-footer text-muted">
+      {% for tag in todoitem.tags %}
+          {{ tag }}
+      {% endfor %}
+  </div>
+</div>

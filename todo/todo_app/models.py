@@ -6,10 +6,14 @@ class TodoItem(models.Model):
     content = models.TextField(blank=False)
     creation_date = models.DateTimeField(auto_now_add=True)
     last_edit_date = models.DateTimeField(auto_now=True)
+    assignee = models.ForeignKey('User',
+                                 on_delete=models.SET_NULL,
+                                 null=True,
+                                 related_name='assigned_todo_items')
     owner = models.ForeignKey('User',
                               on_delete=models.SET_NULL,
                               null=True,
-                              related_name='todo_items')
+                              related_name='self_todo_items')
     tags = models.ManyToManyField('Tag',
                                   blank=False,
                                   related_name='todo_items')

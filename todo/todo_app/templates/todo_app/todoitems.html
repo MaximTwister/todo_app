@@ -2,6 +2,6 @@
 
 {% block content %}
     {% for todoitem in todoitems %}
-        <h3> {{ todoitem }}</h3>
+        {% include "todo_app/includes/card.html" %}
     {% endfor %}
 {% endblock %}
