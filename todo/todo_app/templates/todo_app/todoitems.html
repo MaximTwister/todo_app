@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
-{% for todoitem in todoitems %}
-    <h3> {{ todoitem }}</h3>
-{% endfor %}
-</body>
-</html>
+{% extends "todo_app/base.html" %}
+
+{% block content %}
+    {% for todoitem in todoitems %}
+        <h3> {{ todoitem }}</h3>
+    {% endfor %}
+{% endblock %}

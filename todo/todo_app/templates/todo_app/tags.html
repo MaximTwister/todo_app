@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
-{% for tag in tags %}
-    <h3> {{ tag }}</h3>
-{% endfor %}
-</body>
-</html>
+{% extends "todo_app/base.html" %}
+
+{% block content %}
+    <ul>
+    {% for tag in tags %}
+        <li>{{ tag }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}
