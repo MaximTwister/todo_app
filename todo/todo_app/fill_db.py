@@ -14,16 +14,12 @@ def create_users(users_amount=10):
     for _ in range(users_amount):
         User.objects.create(
             name=fkr.name(),
-            telegram_id=randint(pow(10, 9), (pow(10, 10) - 1))
-        )
+            telegram_id=fkr.numerify(text=('#'*10)))
 
 
 def update_tags():
     for tag in all_tags:
-        print(type(tag))
         if not list(Tag.objects.filter(title=tag)):
-            print(tag)
-            print(type(tag))
             Tag.objects.create(title=tag)
 
 
