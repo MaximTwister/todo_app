@@ -2,8 +2,8 @@ from random import randint, choice
 
 from faker import Faker
 
-from .models import Tag, TodoItem, User
-from .constants import all_tags as tags
+from todo.todo_app.models import Tag, TodoItem, User
+from todo.todo_app.constants import all_tags as tags
 
 
 fkr = Faker()
@@ -19,7 +19,7 @@ def create_users(users_amount=10):
 def update_tags():
     exist_tags = list(Tag.objects.values_list("title", flat=True))
     new_tags = [Tag(title=tag) for tag in tags if tag not in exist_tags]
-    Tag.objects.bulk(new_tags)
+    Tag.objects.bulk_create(new_tags)
 
 
 def create_todos(todos_amount=10):

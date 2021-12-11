@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class TodoItem(models.Model):
@@ -21,6 +22,9 @@ class TodoItem(models.Model):
     def __str__(self):
         return f'{self.owner}: {self.title}'
 
+    def get_absolute_url(self):
+        return reverse("get_todoitem", kwargs={"pk": self.pk})
+
     class Meta:
         db_table = 'todo_item'
 
@@ -40,3 +44,6 @@ class Tag(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+
+    def get_absolute_url(self):
+        return reverse("get_todoitems", kwargs={"tag": self.title})
