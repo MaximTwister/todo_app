@@ -1,11 +1,10 @@
 from random import randint, choice
-import english_words
 
-from django.test import TestCase
 from faker import Faker
 
 from .models import Tag, TodoItem, User
-from .constants import all_tags
+from .constants import all_tags as tags
+
 
 fkr = Faker()
 
@@ -14,13 +13,13 @@ def create_users(users_amount=10):
     for _ in range(users_amount):
         User.objects.create(
             name=fkr.name(),
-            telegram_id=fkr.numerify(text=('#'*10)))
+            telegram_id=fkr.numerify(text=('#' * 10)))
 
 
 def update_tags():
-    for tag in all_tags:
-        if not list(Tag.objects.filter(title=tag)):
-            Tag.objects.create(title=tag)
+    exist_tags = list(Tag.objects.values_list("title", flat=True))
+    new_tags = [Tag(title=tag) for tag in tags if tag not in exist_tags]
+    Tag.objects.bulk(new_tags)
 
 
 def create_todos(todos_amount=10):
