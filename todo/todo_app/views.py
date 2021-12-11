@@ -25,4 +25,3 @@ def get_todoitems(request: HttpRequest):
                'title': 'TodoItems list'
                }
     return render(request, 'todo_app/todoitems.html', context=context)
-
