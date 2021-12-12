@@ -5,7 +5,7 @@
     <div class="col-sm">
         <div class="card text-center">
           <div class="card-header">
-              SomeInfo
+              {{ todoitem.assignee.name }}
           </div>
           <div class="card-body">
             <h5 class="card-title">{{ todoitem.title|title }}</h5>
@@ -13,7 +13,10 @@
             <a href="#" class="btn btn-primary">Read Todo</a>
           </div>
           <div class="card-footer text-muted">
-              {{ todoitem.tags }}
+              {% for tag in todoitem.tags.all %}
+{#                <a href="{% url 'get_todoitems' tag=tag %}">#{{ tag }}</a>#}
+                  <a href="{{ tag.get_absolute_url }}">#{{ tag }}</a>
+              {% endfor %}
           </div>
         </div>
     </div>
