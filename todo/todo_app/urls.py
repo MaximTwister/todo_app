@@ -8,4 +8,5 @@ urlpatterns = [
     path('todoitem/<int:pk>/', views.get_todoitem, name='get_todoitem'),
     path("todoitems/", views.get_todoitems, name='get_todoitems'),
     path("todoitems/<str:tag>/", views.get_todoitems, name='get_todoitems'),
+    path("create_form/<str:item>/", views.post_form, name='post_form')
 ]
