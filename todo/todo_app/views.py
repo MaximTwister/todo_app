@@ -41,9 +41,11 @@ def get_todoitems(request: HttpRequest, tag=None):
 
 
 def post_form(request, item):
-    forms = {'user': {'title': 'Create user', 'form': UserForm},
-             'tag': {'title': 'Create tag', 'form': TagForm},
-             'todoitem': {'title': 'Create todoitem', 'form': TodoItemForm}}
+    forms = {
+        'user': {'title': 'Create user', 'form': UserForm},
+        'tag': {'title': 'Create tag', 'form': TagForm},
+        'todoitem': {'title': 'Create todoitem', 'form': TodoItemForm},
+    }
 
     title = forms[item]['title']
     submitted = False
@@ -58,9 +60,8 @@ def post_form(request, item):
         if 'submitted' in request.GET:
             submitted = True
 
-    return render(request, 'todo_app/post_base.html', {'form': form,
-                                                       'submitted': submitted,
-                                                       'title': title})
+    context = {'form': form, 'submitted': submitted, 'title': title}
+    return render(request, 'todo_app/post_base.html', context=context)
 
 
 
