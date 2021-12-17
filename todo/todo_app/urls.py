@@ -8,4 +8,6 @@ urlpatterns = [
     path('todoitem/<int:pk>/', views.get_todoitem, name='get_todoitem'),
     path("todoitems/", views.get_todoitems, name='get_todoitems'),
     path("todoitems/<str:tag>/", views.get_todoitems, name='get_todoitems'),
+    path("todoitem/<int:pk>/update/", views.update_todoitem, name='update_todoitem'),
+
 ]

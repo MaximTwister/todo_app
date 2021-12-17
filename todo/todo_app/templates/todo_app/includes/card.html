@@ -10,7 +10,7 @@
           <div class="card-body">
             <h5 class="card-title">{{ todoitem.title|title }}</h5>
             <p class="card-text">{{ todoitem.content|truncatewords:15 }}</p>
-            <a href="#" class="btn btn-primary">Read Todo</a>
+            <a href="{{ todoitem.get_absolute_url }}" class="btn btn-primary">Read</a>
           </div>
           <div class="card-footer text-muted">
               {% for tag in todoitem.tags.all %}

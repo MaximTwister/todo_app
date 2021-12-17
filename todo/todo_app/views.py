@@ -1,5 +1,7 @@
+import json
+
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from .models import Tag, User, TodoItem
 
 
@@ -37,3 +39,20 @@ def get_todoitems(request: HttpRequest, tag=None):
                'title': 'TodoItems list'
                }
     return render(request, 'todo_app/todoitems.html', context=context)
+
+
+def update_todoitem(request, pk):
+    # request.is_ajax deprecated since django 3.1
+    is_ajax = request.META.get("CONTENT_TYPE") == "application/json"
+    if is_ajax and request.method == "POST":
+        body = json.loads(request.body)
+        print(f"AJAX Request Body : {body}")
+        todoitem = TodoItem.objects.get(pk=pk)
+        todoitem.content = body.get("content")
+        todoitem.title = body.get("title")
+        todoitem.save()
+    else:
+        return JsonResponse(data={"error": "Not supported Method"}, status=405)
+    return JsonResponse({'foo': 'bar'})
+
+

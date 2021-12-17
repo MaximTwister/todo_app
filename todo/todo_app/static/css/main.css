@@ -1,0 +1,20 @@
+
+/*Because the inline style display:block is overriding CSS.
+  Need to either remove this inline style or use !important:*/
+.not-vis {
+  display: none !important;
+}
+
+.show-newline {
+  white-space: pre-wrap;
+}
+
+.edit-icon{
+  margin-inline: 15px;
+}
+
+.title_paragraph {
+  margin-bottom: 0;
+  display: inline;
+  white-space: nowrap;
+}
