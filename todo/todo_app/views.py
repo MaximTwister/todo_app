@@ -42,21 +42,20 @@ def get_todoitems(request: HttpRequest, tag=None):
 
 def post_form(request, item):
     forms = {
-        'user': {'title': 'Create user', 'form': UserForm},
-        'tag': {'title': 'Create tag', 'form': TagForm},
-        'todoitem': {'title': 'Create todoitem', 'form': TodoItemForm},
+        'user': ('Create user', UserForm),
+        'tag': ('Create tag', TagForm),
+        'todoitem': ('Create todoitem', TodoItemForm),
     }
 
-    title = forms[item]['title']
+    title, form = forms[item]
     submitted = False
     if request.method == 'POST':
-        form = forms[item]['form'](request.POST)
+        form = form(request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('?submitted=True')
 
-    else:
-        form = forms[item]['form']
+    elif request.method == 'GET':
         if 'submitted' in request.GET:
             submitted = True
 
