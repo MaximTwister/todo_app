@@ -1,9 +1,22 @@
 <div class="card">
-  <div class="card-header">
-      {{ todoitem.title }}
-  </div>
-  <div class="card-body">
-    <p class="card-text">{{ todoitem.content }}</p>
-    <a href="#" class="btn btn-primary">Edit</a>
-  </div>
+
+    <div class="card-header">
+        {{ todoitem.title }}
+    </div>
+
+    <div class="card-body">
+        {% csrf_token %}
+        <p class="card-text" id="todo_content">{{ todoitem.content }}</p>
+
+        <div>
+            <div>
+                <a href="#" class="btn btn-primary" id="edit" onClick="btnAction(event)">Edit</a>
+            </div>
+
+            <div>
+                <a href="#" class="btn btn-success not-vis" id="save" onClick="btnAction(event)">Save</a>
+            </div>
+        </div>
+
+    </div>
 </div>
