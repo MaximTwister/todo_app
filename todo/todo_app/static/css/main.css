@@ -1,6 +1,7 @@
 
 /*Because the inline style display:block is overriding CSS.
   Need to either remove this inline style or use !important:*/
+
 .not-vis {
   display: none !important;
 }

@@ -14,6 +14,12 @@
 
 {% include "todo_app/includes/navbar.html" %}
 
+{% if user.is_authenticated %}
+    <p>Hello {{ user.username }}</p>
+{% else %}
+    <p>Hello Anonymous</p>
+{% endif %}
+
 {% block content %}
     Default Block Content
 {% endblock %}

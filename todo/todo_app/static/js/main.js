@@ -11,7 +11,6 @@ function detectEnter (event) {
     }
 }
 
-
 function delTodo(event) {
     console.log("Delete Todo")
 }
@@ -29,13 +28,11 @@ function btnAction(event) {
     toggle_content_edit_area(is_area_editable)
 }
 
-
 const changeIcons = () => {
     let icon_classes = ["fa-pencil-alt", "fa-check-square"]
     icon_classes.forEach((item) =>
         document.getElementById("edit_title").classList.toggle(item))
 }
-
 
 const editTitle = event => {
     console.log("Edit Title Toggled with: ", event)
@@ -48,7 +45,6 @@ const editTitle = event => {
     todoTile.contentEditable = (!is_updated_title).toString()
     todoTile.focus()
 };
-
 
 function toggle_content_edit_area(is_area_editable) {
     let todoContent = document.getElementById("todo_content")
@@ -73,7 +69,6 @@ function createXHR(url, csrftoken) {
         }
     return xhr
 }
-
 
 function request_update_todo() {
     let todo_content = document.getElementById("todo_content").innerText
