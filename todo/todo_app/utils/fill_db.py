@@ -1,9 +1,10 @@
 from random import randint, choice
 
 from faker import Faker
+from django.contrib.auth.models import User
 
-from todo.todo_app.models import Tag, TodoItem, User
-from todo.todo_app.constants import all_tags as tags
+from todo_app.models import Tag, TodoItem, Account
+from todo_app.constants import all_tags as tags
 
 
 fkr = Faker()
@@ -11,9 +12,18 @@ fkr = Faker()
 
 def create_users(users_amount=10):
     for _ in range(users_amount):
-        User.objects.create(
-            name=fkr.name(),
-            telegram_id=fkr.numerify(text=('#' * 10)))
+        first_name, second_name, *_ = fkr.name().split(" ")
+        username = "".join([first_name.lower(), second_name.lower()])
+        password = "SuperStrongPass123"
+        user = User.objects.create_user(
+            first_name=first_name,
+            last_name=second_name,
+            username=username,
+            password=password)
+        user.save()
+        account = Account.objects.create(usr=user)
+        account.save()
+    # telegram_id=fkr.numerify(text=('#' * 10)))
 
 
 def update_tags():
@@ -34,3 +44,9 @@ def create_todos(todos_amount=10):
         new_user.save()
         for _ in range(randint(1, 4)):
             new_user.tags.add(choice(Tag.objects.all()))
+
+
+def main():
+    create_users()
+    update_tags()
+    create_todos()

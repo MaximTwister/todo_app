@@ -7,7 +7,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("todo/", include("todo_app.urls")),
     path("register/", views.register, name="register"),
-    path("login/", views.login_request, name="login"),
+    path("login/", views.login_request, name="log_in"),
     path("logout/", views.logout_request, name="logout"),
     path("accounts/", include("django.contrib.auth.urls"))
 ]

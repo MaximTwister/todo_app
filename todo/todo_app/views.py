@@ -1,12 +1,17 @@
 import json
 
+from django.views.generic import ListView, DetailView
+from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import HttpRequest, JsonResponse
+
+from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .models import Tag, User, TodoItem
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from .models import Tag, Account, TodoItem
 from .forms import TodoUserForm
 
 
@@ -35,6 +40,12 @@ def get_todoitem(request, pk):
     return render(request, 'todo_app/todoitems.html', context=context)
 
 
+class TodoDetailView(DetailView):
+    model = TodoItem
+    template_name = "todo_app/todoitem.html"
+    context_object_name = "todoitem"
+
+
 @login_required(login_url="/login/")
 def get_todoitems(request: HttpRequest, tag=None):
     if tag:
@@ -45,6 +56,29 @@ def get_todoitems(request: HttpRequest, tag=None):
                'title': 'TodoItems list'
                }
     return render(request, 'todo_app/todoitems.html', context=context)
+
+
+class TagsList(ListView):
+    model = Tag
+
+
+class TodoItemsList(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+    # redirect_field_name = 'redirect_to'
+
+    model = TodoItem
+    template_name = "todo_app/todoitems.html"
+    context_object_name = "todoitems"
+
+    def get_queryset(self):
+        filter_kwargs = {"owner": self.request.user}
+        if "tag" in self.kwargs:
+            tag_title = self.kwargs.get("tag")
+            tag = Tag.objects.get(title=tag_title)
+            filter_kwargs['tags'] = tag
+        print(filter_kwargs)
+        qs = super().get_queryset()
+        return qs.filter(**filter_kwargs)
 
 
 def update_todoitem(request, pk):
@@ -62,6 +96,8 @@ def update_todoitem(request, pk):
     return JsonResponse({'foo': 'bar'})
 
 
+
+
 def register(request):
     if request.method == "POST":
         user_form = TodoUserForm(request.POST)
@@ -73,6 +109,8 @@ def register(request):
         if user_form.is_valid():
             print("Form is valid")
             user = user_form.save()
+            account = Account.objects.create(usr=user)
+            account.save()
             login(request, user)
             messages.success(request, "Registration successful.")
             return redirect("get_todoitems")
@@ -111,4 +149,4 @@ def login_request(request):
 def logout_request(request):
     logout(request)
     messages.info(request, "Logged out.")
-    return redirect("login")
+    return redirect("log_in")
