@@ -1,5 +1,9 @@
+import json
+
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponseRedirect, HttpResponse, JsonResponse
+from django.views.generic import ListView, DetailView
+
 from .models import Tag, User, TodoItem
 from .forms import TagForm, UserForm, TodoItemForm
 
@@ -12,6 +16,10 @@ def get_tags(request: HttpRequest):
     return render(request, 'todo_app/tags.html', context=context)
 
 
+class TagsList(ListView):
+    model = Tag
+
+
 def get_users(request: HttpRequest):
     users = User.objects.all()
     context = {'users': users,
@@ -20,24 +28,27 @@ def get_users(request: HttpRequest):
     return render(request, 'todo_app/users.html', context=context)
 
 
-def get_todoitem(request, pk):
-    todoitem = TodoItem.objects.get(pk=pk)
-    context = {'todoitem': todoitem,
-               'title': F"TodoItem {todoitem.title}",
-               "read_mode": True,
-               }
-    return render(request, 'todo_app/todoitems.html', context=context)
+class TodoDetailView(DetailView):
+    model = TodoItem
+    template_name = "todo_app/todoitem.html"
+    context_object_name = "todoitem"
 
 
-def get_todoitems(request: HttpRequest, tag=None):
-    if tag:
-        todoitems = TodoItem.objects.filter(tags__title=tag)
-    else:
-        todoitems = TodoItem.objects.all()
-    context = {'todoitems': todoitems,
-               'title': 'TodoItems list'
-               }
-    return render(request, 'todo_app/todoitems.html', context=context)
+class TodoItemsList(ListView):
+    model = TodoItem
+    template_name = "todo_app/todoitems.html"
+    context_object_name = "todoitems"
+
+    def get_queryset(self):
+        filter_kwargs = {}
+        if "tag" in self.kwargs:
+            tag_title = self.kwargs.get("tag")
+            tag = Tag.objects.get(title=tag_title)
+            filter_kwargs['tags'] = tag
+        print(filter_kwargs)
+        qs = super().get_queryset()
+        return qs.filter(**filter_kwargs)
+
 
 
 def post_form(request, item):
@@ -63,6 +74,14 @@ def post_form(request, item):
     return render(request, 'todo_app/post_base.html', context=context)
 
 
-
-
-
+def update_todoitem(request, pk):
+    is_json = request.META.get("CONTENT_TYPE") == "application/json"
+    if is_json and request.method == "POST":
+        body = json.loads(request.body)
+        todoitem = TodoItem.objects.get(pk=pk)
+        todoitem.content = body.get("content")
+        todoitem.title = body.get("title")
+        todoitem.save()
+        return JsonResponse({"status": "Updated"}, status=200)
+    else:
+        return JsonResponse(data={"error": "Not Supported Method or ContentType"}, status=405)

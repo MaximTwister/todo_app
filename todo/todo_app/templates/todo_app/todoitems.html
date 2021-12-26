@@ -2,11 +2,9 @@
 {% load static %}
 
 {% block content %}
-    {% if read_mode %}
-        {% include "todo_app/includes/full_todoitem_card.html" %}
-    {% else %}
-        {% for todoitem in todoitems %}
-            {% include "todo_app/includes/card.html" %}
-        {% endfor %}
-    {% endif %}
+
+    {% for todoitem in todoitems %}
+        {% include "todo_app/includes/card.html" %}
+    {% endfor %}
+
 {% endblock %}

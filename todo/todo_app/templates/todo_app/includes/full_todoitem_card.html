@@ -1,20 +1,25 @@
 <div class="card">
 
-    <div class="card-header">
-        {{ todoitem.title }}
+    <div class="card-header" style="display: -webkit-box">
+        <p id="todo_title" class="title_paragraph" contenteditable="false">{{ todoitem.title }}</p>
+        <em class="fas fa-pencil-alt edit-icon" id="edit_title" onClick="editTitle(event)"></em>
     </div>
 
     <div class="card-body">
         {% csrf_token %}
         <p class="card-text" id="todo_content">{{ todoitem.content }}</p>
 
-        <div>
+        <div class="d-flex">
             <div>
                 <a href="#" class="btn btn-primary" id="edit" onClick="btnAction(event)">Edit</a>
             </div>
 
             <div>
                 <a href="#" class="btn btn-success not-vis" id="save" onClick="btnAction(event)">Save</a>
+            </div>
+
+            <div class="ms-auto">
+                <a href="#" class="btn btn-warning" id="delete" onClick="delTodo(event)">Delete</a>
             </div>
         </div>
 

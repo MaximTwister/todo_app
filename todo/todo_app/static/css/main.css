@@ -1,3 +1,11 @@
 .not-vis {
     display: none !important;
 }
+
+.edit-icon {
+    margin-inline: 15px;
+}
+
+.title_paragraph {
+    margin-bottom: 0;
+}

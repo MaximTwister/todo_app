@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import sys
 from pathlib import Path
 import os
 
@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+sys.modules["fontawesome_free"] = __import__("fontawesome-free")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -39,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'todo_app.apps.TodoAppConfig',
-
+    'fontawesome_free',
 ]
 
 MIDDLEWARE = [
