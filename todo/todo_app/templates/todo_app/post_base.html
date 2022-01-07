@@ -3,22 +3,28 @@
 {% block title %}{{ title }}{% endblock title %}
 
 {% block content %}
-{% if submitted %}
-    <p class="success">
-     Your info was submitted successfully. Thank you.
-   </p>
+    <div class="row">
+    <div class="col-4"></div>
+    <div class="col-6">
+        {% if submitted %}
+            <p class="success">
+             Your info was submitted successfully. Thank you.
+            </p>
 
- {% else %}
-<form action=" " method="post" novalidate>
-    <table>
+        {% else %}
+        <form action=" " method="post" novalidate>
+            <table>
+            {{ form.as_table }}
+                <tr>
+                    <td>&nbsp;</td>
+                    <td><input type="submit" value="Submit"></td>
+                </tr>
+            </table>
+         {% csrf_token %}
+        </form>
+        {% endif %}
+    </div>
+    <div class="col-2"></div>
+</div>
 
-    {{ form.as_table }}
-        <tr>
-            <td>&nbsp;</td>
-            <td><input type="submit" value="Submit"></td>
-        </tr>
-    </table>
- {% csrf_token %}
-</form>
-{% endif %}
 {% endblock content %}
