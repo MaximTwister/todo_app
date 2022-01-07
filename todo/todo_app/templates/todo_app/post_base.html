@@ -3,10 +3,14 @@
 {% block title %}{{ title }}{% endblock title %}
 
 {% block content %}
-{% if submitted %}
-    <p class="success">
-     Your info was submitted successfully. Thank you.
-   </p>
+    <div class="row">
+    <div class="col-4"></div>
+    <div class="col-6">
+        {% if submitted %}
+            <p class="success">
+             Your info was submitted successfully. Thank you.
+            </p>
+
 
  {% else %}
 
@@ -22,6 +26,7 @@
     </table>
     {% csrf_token %}
       </form>
+   
 
 
 {%if tags%}
@@ -109,7 +114,11 @@
 </script>
 
 {% endif %}
+         </div>
+    <div class="col-2"></div>
+</div>
 
 {% endif %}
+
 
 {% endblock content %}

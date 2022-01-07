@@ -1,8 +1,8 @@
 <div class="container">
   <div class="row">
-    <div class="col-sm">
+    <div class="col-3">
     </div>
-    <div class="col-sm">
+    <div class="col-6 main">
         <div class="card text-center">
           <div class="card-header">
               {{ todoitem.assignee.name }}
@@ -10,7 +10,7 @@
           <div class="card-body">
             <h5 class="card-title">{{ todoitem.title|title }}</h5>
             <p class="card-text">{{ todoitem.content|truncatewords:15 }}</p>
-            <a href="{{ todoitem.get_absolute_url }}" class="btn btn-primary">Read</a>
+            <a href="{{ todoitem.get_absolute_url }}" class="btn btn-primary">Read Full</a>
           </div>
           <div class="card-footer text-muted">
               {% for tag in todoitem.tags.all %}
@@ -20,7 +20,7 @@
           </div>
         </div>
     </div>
-    <div class="col-sm">
+    <div class="col-3">
     </div>
   </div>
 </div>
