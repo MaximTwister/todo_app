@@ -1,9 +1,10 @@
 import json
 
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, DeleteView
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, JsonResponse
+from django.urls import reverse_lazy
 
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
@@ -31,19 +32,32 @@ def get_users(request: HttpRequest):
     return render(request, 'todo_app/users.html', context=context)
 
 
-def get_todoitem(request, pk):
-    todoitem = TodoItem.objects.get(pk=pk)
-    context = {'todoitem': todoitem,
-               'title': F"TodoItem {todoitem.title}",
-               "read_mode": True,
-               }
-    return render(request, 'todo_app/todoitems.html', context=context)
-
-
-class TodoDetailView(DetailView):
+class TodoDetail(DetailView):
     model = TodoItem
     template_name = "todo_app/todoitem.html"
     context_object_name = "todoitem"
+
+    def patch(self, request, *args, **kwargs):
+        content_type = self.request.META.get("CONTENT_TYPE")
+        if content_type == "application/json":
+            pk = self.kwargs.get("pk")
+            body = json.loads(self.request.body)
+            todoitem = TodoItem.objects.get(pk=pk)
+            todoitem.content = body.get("content")
+            todoitem.title = body.get("title")
+            todoitem.save()
+        else:
+            return JsonResponse(
+                data={"error": f"ContentType: {content_type} is not supported"},
+                status=405
+            )
+        return JsonResponse({'foo': 'bar'})
+
+
+class TodoDelete(DeleteView):
+    # DeleteView only deletes on POST
+    model = TodoItem
+    success_url = reverse_lazy("get_todoitems")
 
 
 @login_required(login_url="/login/")
@@ -79,23 +93,6 @@ class TodoItemsList(LoginRequiredMixin, ListView):
         print(filter_kwargs)
         qs = super().get_queryset()
         return qs.filter(**filter_kwargs)
-
-
-def update_todoitem(request, pk):
-    # request.is_ajax deprecated since django 3.1
-    is_ajax = request.META.get("CONTENT_TYPE") == "application/json"
-    if is_ajax and request.method == "POST":
-        body = json.loads(request.body)
-        print(f"AJAX Request Body : {body}")
-        todoitem = TodoItem.objects.get(pk=pk)
-        todoitem.content = body.get("content")
-        todoitem.title = body.get("title")
-        todoitem.save()
-    else:
-        return JsonResponse(data={"error": "Not supported Method"}, status=405)
-    return JsonResponse({'foo': 'bar'})
-
-
 
 
 def register(request):

@@ -32,18 +32,23 @@ def update_tags():
     Tag.objects.bulk_create(new_tags)
 
 
-def create_todos(todos_amount=10):
+def create_todos(todos_amount=10, predefined_owner_pk=None):
+    tags_objects = Tag.objects.all()
+    users_objects = User.objects.all()
     for _ in range(todos_amount):
         title = fkr.sentence(nb_words=5)
         content = fkr.paragraph(nb_sentences=5)
-        owner = choice(User.objects.all())
+        if not predefined_owner_pk:
+            owner = choice(users_objects)
+        else:
+            owner = users_objects.get(pk=predefined_owner_pk)
         assignee = owner
         while owner == assignee:
-            assignee = choice(User.objects.all())
+            assignee = choice(users_objects)
         new_user = TodoItem(title=title, content=content, owner=owner, assignee=assignee)
         new_user.save()
         for _ in range(randint(1, 4)):
-            new_user.tags.add(choice(Tag.objects.all()))
+            new_user.tags.add(choice(tags_objects))
 
 
 def main():

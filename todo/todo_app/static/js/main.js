@@ -1,6 +1,17 @@
 console.log("JavaScript Rocks!")
 document.getElementById("todo_title").onkeydown=detectEnter
 
+let modal = document.getElementById('deleteModal')
+modal.addEventListener("click", function(event) {
+    if (event.target.innerText === "Delete") delTodo()
+    else closeModal()
+})
+
+// When the user clicks anywhere outside the modal, close it
+window.onclick = function(event) {
+    if (event.target === modal) closeModal()
+}
+
 
 function detectEnter (event) {
     if (event.target.id === "todo_title" && event.which === 13) {
@@ -13,6 +24,8 @@ function detectEnter (event) {
 
 function delTodo(event) {
     console.log("Delete Todo")
+    request_delete_todo()
+    closeModal()
 }
 
 function btnAction(event) {
@@ -54,18 +67,23 @@ function toggle_content_edit_area(is_area_editable) {
     else todoContent.focus()
 }
 
-function createXHR(url, csrftoken) {
+function createXHR(url, csrftoken, method) {
     // Creating a XHR object
     let xhr = new XMLHttpRequest()
     // Open an async connection
-    xhr.open("POST", url, true)
+    xhr.open(method, url, true)
     // Set the request header i.e. which type of content you are sending
     xhr.setRequestHeader("Content-Type", "application/json")
     xhr.setRequestHeader("X-CSRFToken", csrftoken)
     // Create a state change callback
-    xhr.onreadystatechange = event => {
-        if (xhr.readyState === 4 && xhr.status === 200) console.log("Perfect: ", event)
-        else console.log("Not really perfect: ", event)
+    xhr.onreadystatechange = () => {
+        let respURL = xhr.responseURL
+        console.log('Response from Django: ', xhr)
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log("Perfect Response: ", xhr)
+            window.location.replace(respURL)
+        }
+        else console.log("Not really perfect Response: ", xhr)
         }
     return xhr
 }
@@ -75,6 +93,7 @@ function request_update_todo() {
     let todo_title = document.getElementById("todo_title").innerText
 
     let url = "update/"
+    let method = "PATCH"
 
     // /** @type {String} */
     let csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value
@@ -82,6 +101,26 @@ function request_update_todo() {
 
     // Converting JSON data to string and send with request
     const data = JSON.stringify({"title": todo_title, "content": todo_content })
-    const xhr = createXHR(url, csrftoken)
+    const xhr = createXHR(url, csrftoken, method)
     xhr.send(data)
+}
+
+function request_delete_todo() {
+    let url = "delete/"
+    let method = "POST"
+    // /** @type {String} */
+    let csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value
+    console.log("CSRF: ", csrftoken)
+    const xhr = createXHR(url, csrftoken, method)
+    xhr.send()
+}
+
+function openModal() {
+    document.getElementById("deleteModal").style.display = "block"
+    document.getElementById("deleteModal").classList.add("show")
+}
+
+function closeModal() {
+    document.getElementById("deleteModal").style.display = "none"
+    document.getElementById("deleteModal").classList.remove("show")
 }

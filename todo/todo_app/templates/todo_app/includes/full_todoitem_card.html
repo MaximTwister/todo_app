@@ -21,10 +21,12 @@
           </div>
 
           <div class="ms-auto p-2 bd-highlight">
-              <a href="#" class="btn btn-warning" id="delete" onClick="delTodo(event)">Delete</a>
+              <a href="#" class="btn btn-warning" id="delete" onClick="openModal()">Delete</a>
           </div>
 
       </div>
   </div>
+
+    {% include "todo_app/includes/modal.html" %}
 
 </div>
