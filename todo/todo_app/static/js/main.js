@@ -77,3 +77,5 @@ function request_update_todo() {
     const xhr = createXHR(url, csrftoken)
     xhr.send(data)
  }
+
+
