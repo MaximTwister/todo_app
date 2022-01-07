@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'fontawesome_free',
     'todo_app.apps.TodoAppConfig',
-
 ]
 
 MIDDLEWARE = [

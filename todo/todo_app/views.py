@@ -6,7 +6,6 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest, JsonResponse
 from django.urls import reverse_lazy
 
-from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -16,20 +15,8 @@ from .models import Tag, Account, TodoItem
 from .forms import TodoUserForm
 
 
-def get_tags(request: HttpRequest):
-    tags = Tag.objects.all()
-    context = {'tags': tags,
-               'title': 'Tags list'
-               }
-    return render(request, 'todo_app/tags.html', context=context)
-
-
-def get_users(request: HttpRequest):
-    users = User.objects.all()
-    context = {'users': users,
-               'title': 'Users list'
-               }
-    return render(request, 'todo_app/users.html', context=context)
+class TagsList(ListView):
+    model = Tag
 
 
 class TodoDetail(DetailView):
@@ -51,11 +38,11 @@ class TodoDetail(DetailView):
                 data={"error": f"ContentType: {content_type} is not supported"},
                 status=405
             )
-        return JsonResponse({'foo': 'bar'})
+        return JsonResponse({'status': 200, 'message': "data updated"})
 
 
 class TodoDelete(DeleteView):
-    # DeleteView only deletes on POST
+    # DeleteView ONLY deletes on POST
     model = TodoItem
     success_url = reverse_lazy("get_todoitems")
 
@@ -70,10 +57,6 @@ def get_todoitems(request: HttpRequest, tag=None):
                'title': 'TodoItems list'
                }
     return render(request, 'todo_app/todoitems.html', context=context)
-
-
-class TagsList(ListView):
-    model = Tag
 
 
 class TodoItemsList(LoginRequiredMixin, ListView):
@@ -106,8 +89,11 @@ def register(request):
         if user_form.is_valid():
             print("Form is valid")
             user = user_form.save()
+            print(f"Saved User: {user}")
             account = Account.objects.create(usr=user)
+            print(f"Created Account: {account}")
             account.save()
+            print(f"Saved Account: {account}")
             login(request, user)
             messages.success(request, "Registration successful.")
             return redirect("get_todoitems")

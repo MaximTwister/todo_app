@@ -12,7 +12,6 @@ window.onclick = function(event) {
     if (event.target === modal) closeModal()
 }
 
-
 function detectEnter (event) {
     if (event.target.id === "todo_title" && event.which === 13) {
         event.preventDefault()

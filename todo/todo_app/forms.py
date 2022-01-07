@@ -10,9 +10,11 @@ class TodoUserForm(UserCreationForm):
         user = super().save(commit=False)
         user.telegram_id = self.cleaned_data["telegram_id"]
         if commit:
+            print(f"Form User: {user}")
             user.save()
-        else:
-            return user
+            print(f"Form Saved User: {user}")
+
+        return user
 
     class Meta:
         model = User

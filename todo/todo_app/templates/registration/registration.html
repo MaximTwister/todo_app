@@ -2,6 +2,8 @@
 
 {% block content %}
 
+    {% include "todo_app/includes/messages.html"%}
+
     <div class="container py-5">
         <h1>Register</h1>
         <form method="POST">
@@ -11,7 +13,7 @@
         </form>
         <p class="text-center">
             If you already have an account,
-            <a href="/login">Login</a> instead.
+            <a href="{% url 'log_in' %}">Login</a> instead.
         </p>
     </div>
 

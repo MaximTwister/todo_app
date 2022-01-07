@@ -8,17 +8,20 @@ class TodoItem(models.Model):
     content = models.TextField(blank=False)
     creation_date = models.DateTimeField(auto_now_add=True)
     last_edit_date = models.DateTimeField(auto_now=True)
-    assignee = models.ForeignKey(User,
-                                 on_delete=models.SET_NULL,
-                                 null=True,
-                                 related_name='assigned_todo_items')
-    owner = models.ForeignKey(User,
-                              on_delete=models.SET_NULL,
-                              null=True,
-                              related_name='self_todo_items')
-    tags = models.ManyToManyField('Tag',
-                                  blank=False,
-                                  related_name='todo_items')
+    assignee = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='assigned_todo_items')
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='self_todo_items')
+    tags = models.ManyToManyField(
+        'Tag',
+        blank=False,
+        related_name='todo_items')
 
     def __str__(self):
         return f'{self.owner}: {self.title}'
@@ -32,10 +35,14 @@ class TodoItem(models.Model):
 
 class Account(models.Model):
     # default related name: TodoItem_set
-    usr = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='account')
     telegram_id = models.BigIntegerField(blank=True, null=True)
     group = models.CharField(max_length=20, blank=True)
     is_active = models.BooleanField(default=True)
+    usr = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name='account')
 
     def __str__(self):
         return f'{self.usr}: {self.group}: {self.telegram_id}'
