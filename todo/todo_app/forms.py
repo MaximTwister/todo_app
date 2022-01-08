@@ -2,6 +2,11 @@ from django import forms
 from django.forms import ModelForm
 from .models import Tag, TodoItem, User
 
+from django.forms.widgets import Widget
+from django.template import loader
+from django.utils.safestring import mark_safe
+
+
 
 class TagForm(ModelForm):
     class Meta:
@@ -28,12 +33,15 @@ class CustomChoiceField(forms.ModelChoiceField):
         return user.name
 
 
+
+
+
 class TodoItemForm(ModelForm):
     class Meta:
         model = TodoItem
         fields = ['title', 'content',  'owner', 'assignee', 'tags']
         widgets = {
-            'tags': forms.CheckboxSelectMultiple,
+            'tags': forms.SelectMultiple(attrs={'class': 'tag_widget'}),
             'title': forms.Textarea(attrs={'rows': 2}),
             'content': forms.Textarea
         }

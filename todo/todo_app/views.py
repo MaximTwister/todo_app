@@ -59,7 +59,12 @@ def post_form(request, item):
     }
 
     title, form = forms[item]
+    if title == 'Create todoitem':
+        tags = Tag.objects.all()
+    else:
+        tags = []
     submitted = False
+
     if request.method == 'POST':
         form = form(request.POST)
         if form.is_valid():
@@ -70,7 +75,7 @@ def post_form(request, item):
         if 'submitted' in request.GET:
             submitted = True
 
-    context = {'form': form, 'submitted': submitted, 'title': title}
+    context = {'form': form, 'submitted': submitted, 'title': title, 'tags': tags}
     return render(request, 'todo_app/post_base.html', context=context)
 
 
