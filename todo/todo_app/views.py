@@ -50,15 +50,15 @@ class TodoItemsList(ListView):
         return qs.filter(**filter_kwargs)
 
 
-
+# TODO probably move to CBV (Anton)
 def post_form(request, item):
-    forms = {
+    forms_mapping = {
         'user': ('Create user', UserForm),
         'tag': ('Create tag', TagForm),
         'todoitem': ('Create todoitem', TodoItemForm),
     }
 
-    title, form = forms[item]
+    title, form = forms_mapping[item]
     if title == 'Create todoitem':
         tags = Tag.objects.all()
     else:

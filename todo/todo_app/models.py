@@ -39,6 +39,7 @@ class User(models.Model):
         return f'{self.name}: {self.telegram_id}'
 
 
+# TODO tags MUST be unique (Andrew)
 class Tag(models.Model):
     title = models.CharField(max_length=100, blank=False)
 
