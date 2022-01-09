@@ -1,11 +1,8 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Tag, TodoItem, User
+from .models import Tag, TodoItem, Account
 
-from django.forms.widgets import Widget
-from django.template import loader
-from django.utils.safestring import mark_safe
-
+from django.contrib.auth.models import User
 
 
 class TagForm(ModelForm):
@@ -14,12 +11,12 @@ class TagForm(ModelForm):
         fields = ['title']
 
 
-class UserForm(ModelForm):
+class AccountForm(ModelForm):
     class Meta:
-        model = User
-        fields = ['name', 'telegram_id']
-        widgets = {'name': forms.Textarea(attrs={'rows': 2})}
-        name = forms.CharField()
+        model = Account
+        fields = ['group', 'telegram_id']
+        # TODO Create Group Droplist (Andrew)
+        group = forms.CharField(max_length=50)
         telegram_id = forms.IntegerField()
 
     def clean_telegram_id(self):
@@ -30,24 +27,20 @@ class UserForm(ModelForm):
 
 class CustomChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, user):
-        return user.name
-
-
-
+        return user.username
 
 
 class TodoItemForm(ModelForm):
     class Meta:
         model = TodoItem
-        fields = ['title', 'content',  'owner', 'assignee', 'tags']
+        fields = ['title', 'content', 'assignee', 'tags']
         widgets = {
             'tags': forms.SelectMultiple(attrs={'class': 'tag_widget'}),
             'title': forms.Textarea(attrs={'rows': 2}),
             'content': forms.Textarea
         }
-        field_classes = {'owner': CustomChoiceField, 'assignee': CustomChoiceField}
+        field_classes = {'assignee': CustomChoiceField}
         title = forms.CharField()
         content = forms.CharField()
-        owner = forms.ModelChoiceField(queryset=User.objects.all())
         assignee = CustomChoiceField(queryset=User.objects.all())
         tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all())

@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 class TodoItem(models.Model):
@@ -7,11 +8,11 @@ class TodoItem(models.Model):
     content = models.TextField(blank=False)
     creation_date = models.DateTimeField(auto_now_add=True)
     last_edit_date = models.DateTimeField(auto_now=True)
-    assignee = models.ForeignKey('User',
+    assignee = models.ForeignKey(User,
                                  on_delete=models.SET_NULL,
                                  null=True,
                                  related_name='assigned_todo_items')
-    owner = models.ForeignKey('User',
+    owner = models.ForeignKey(User,
                               on_delete=models.SET_NULL,
                               null=True,
                               related_name='self_todo_items')
@@ -29,14 +30,28 @@ class TodoItem(models.Model):
         db_table = 'todo_item'
 
 
-class User(models.Model):
-    # default related name: TodoItem_set
-    name = models.CharField(max_length=50, blank=False)
+class Account(models.Model):
     telegram_id = models.BigIntegerField(blank=False)
+    group = models.ManyToManyField(
+        "Group",
+        blank=True,
+        null=True,
+        related_name="accounts"
+    )
     is_active = models.BooleanField(default=True)
+    usr = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name="account"
+    )
 
     def __str__(self):
-        return f'{self.name}: {self.telegram_id}'
+        return f'{self.usr}: {self.group}: {self.telegram_id}'
+
+
+class Group(models.Model):
+    title = models.CharField(max_length=50, blank=False)
 
 
 # TODO tags MUST be unique (Andrew)

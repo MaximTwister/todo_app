@@ -1,6 +1,12 @@
 console.log("JavaScript Rocks!")
 document.getElementById("todo_title").onkeydown=detectEnter
 
+let modal = document.getElementById("deleteModal")
+
+modal.addEventListener("click", function (event){
+    if (event.target.innerText === "Delete") delTodo()
+    else closeModal()
+})
 
 function detectEnter (event) {
     if (event.target.id === "todo_title" && event.which === 13) {
@@ -14,7 +20,9 @@ function detectEnter (event) {
 }
 
 function delTodo(event) {
-    console.log("Todo Deleted")
+    console.log("Delete Todo")
+    request_delete_todo()
+    closeModal()
 }
 
 function btnAction(event) {
@@ -55,13 +63,18 @@ function toggle_content_edit_area(is_area_editable) {
     else todoContent.focus()
 }
 
-function createXHR (url, csrftoken) {
+function createXHR (url, csrftoken, method) {
     let xhr = new XMLHttpRequest()
-    xhr.open("POST", url, true)
+    xhr.open(method, url, true)
     xhr.setRequestHeader("Content-Type", "application/json")
     xhr.setRequestHeader("X-CSRFToken", csrftoken)
     xhr.onreadystatechange = event => {
-        if (xhr.readyState === 4 && xhr.status === 200) console.log("Perfect: ", event)
+        console.log("Response from Django: ", xhr)
+        let respURL = xhr.responseURL
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log("Perfect: ", event)
+            window.location.replace(respURL)
+        }
         else console.log("Not really perfect: ", event)
     }
     return xhr
@@ -72,10 +85,27 @@ function request_update_todo() {
     let todo_title = document.getElementById("todo_title").innerText
 
     let url = "update/"
+    let method = "PATCH"
     let csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value
     let data = JSON.stringify({"title": todo_title,"content": todo_content})
-    const xhr = createXHR(url, csrftoken)
+    const xhr = createXHR(url, csrftoken, method)
     xhr.send(data)
  }
 
+function request_delete_todo(){
+    let url = "delete/"
+    let method = "POST"
+    let csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value
+    const xhr = createXHR(url, csrftoken, method)
+    xhr.send()
+}
 
+function openModal() {
+    modal.style.display = "block"
+    modal.classList.add("show")
+}
+
+function closeModal() {
+    modal.style.display = "none"
+    modal.classList.remove("show")
+}

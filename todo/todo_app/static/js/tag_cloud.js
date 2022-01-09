@@ -19,13 +19,11 @@ for (element of tags){
     newTag.addEventListener('click', () => widget_handler(newTag, true))
 }
 
-
-
 [...document.querySelectorAll('.item')].forEach(function(item) {
     item.addEventListener('click', function() {
         let selected_tag = item.cloneNode(true)
         selected_tag.className = 'selected';
-        selected_tag.firstChild.insertAdjacentHTML("beforeend", '<button class="remove-button">[x]</button>');
+        selected_tag.firstChild.insertAdjacentHTML("beforeend", '<button class="remove-button"></button>');
         selected_tag.firstChild.addEventListener('click', function(){
             selected_tag.remove()
             item.className = 'item'
@@ -39,7 +37,6 @@ for (element of tags){
         }
     })
 })
-
 
 function widget_handler(tag, bool){
     let selected = document.querySelector('.tag_widget').getElementsByTagName('option')

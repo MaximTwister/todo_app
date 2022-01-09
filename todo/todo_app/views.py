@@ -1,37 +1,38 @@
 import json
 
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponseRedirect, HttpResponse, JsonResponse
-from django.views.generic import ListView, DetailView
+from django.http import HttpResponseRedirect, JsonResponse
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, DeleteView
 
-from .models import Tag, User, TodoItem
-from .forms import TagForm, UserForm, TodoItemForm
-
-
-def get_tags(request: HttpRequest):
-    tags = Tag.objects.all()
-    context = {'tags': tags,
-               'title': 'Tags list'
-               }
-    return render(request, 'todo_app/tags.html', context=context)
+from .models import Tag, Account, TodoItem
+from .forms import TagForm, AccountForm, TodoItemForm
 
 
-class TagsList(ListView):
-    model = Tag
-
-
-def get_users(request: HttpRequest):
-    users = User.objects.all()
-    context = {'users': users,
-               'title': 'Users list'
-               }
-    return render(request, 'todo_app/users.html', context=context)
-
-
-class TodoDetailView(DetailView):
+class TodoDetail(DetailView):
     model = TodoItem
     template_name = "todo_app/todoitem.html"
     context_object_name = "todoitem"
+
+    def patch(self, request, *args, **kwargs):
+        print(kwargs)
+        content_type = request.META.get("CONTENT_TYPE")
+        if content_type == "application/json":
+            pk = self.kwargs.get("pk")
+            body = json.loads(request.body)
+            todoitem = TodoItem.objects.get(pk=pk)
+            todoitem.content = body.get("content")
+            todoitem.title = body.get("title")
+            todoitem.save()
+            return JsonResponse({"status": "Updated"}, status=200)
+        else:
+            return JsonResponse(data={"error": "Not Supported Method or ContentType"},
+                                status=405)
+
+
+class TodoDelete(DeleteView):
+    model = TodoItem
+    success_url = reverse_lazy("get_todoitems")
 
 
 class TodoItemsList(ListView):
@@ -53,7 +54,7 @@ class TodoItemsList(ListView):
 # TODO probably move to CBV (Anton)
 def post_form(request, item):
     forms_mapping = {
-        'user': ('Create user', UserForm),
+        'user': ('Create user', AccountForm),
         'tag': ('Create tag', TagForm),
         'todoitem': ('Create todoitem', TodoItemForm),
     }
@@ -77,16 +78,3 @@ def post_form(request, item):
 
     context = {'form': form, 'submitted': submitted, 'title': title, 'tags': tags}
     return render(request, 'todo_app/post_base.html', context=context)
-
-
-def update_todoitem(request, pk):
-    is_json = request.META.get("CONTENT_TYPE") == "application/json"
-    if is_json and request.method == "POST":
-        body = json.loads(request.body)
-        todoitem = TodoItem.objects.get(pk=pk)
-        todoitem.content = body.get("content")
-        todoitem.title = body.get("title")
-        todoitem.save()
-        return JsonResponse({"status": "Updated"}, status=200)
-    else:
-        return JsonResponse(data={"error": "Not Supported Method or ContentType"}, status=405)
