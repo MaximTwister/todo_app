@@ -61,6 +61,7 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
+
 # Flask stuff:
 instance/
 .webassets-cache
@@ -130,3 +131,6 @@ dmypy.json
 
 # PyCharm Staff
 .idea/
+
+# MacOS staff
+.DS_Store

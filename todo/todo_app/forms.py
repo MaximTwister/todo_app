@@ -3,6 +3,7 @@ from django.forms import ModelForm
 from .models import Tag, TodoItem, Account
 
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 
 
 class TagForm(ModelForm):
@@ -44,3 +45,21 @@ class TodoItemForm(ModelForm):
         content = forms.CharField()
         assignee = CustomChoiceField(queryset=User.objects.all())
         tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all())
+
+
+class TodoUserForm(UserCreationForm):
+    telegram_id = forms.IntegerField(required=True)
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.telegram_id = self.cleaned_data["telegram_id"]
+        if commit:
+            print(f"Form User: {user}")
+            user.save()
+            print(f"Form Saved User: {user}")
+
+        return user
+
+    class Meta:
+        model = User
+        fields = ("username", "telegram_id", "password1", "password2")

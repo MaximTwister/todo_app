@@ -1,12 +1,24 @@
 import json
 
-from django.shortcuts import render
+from django.contrib import messages
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, DeleteView
+from django.views.generic import (
+    ListView,
+    DetailView,
+    DeleteView,
+)
 
-from .models import Tag, Account, TodoItem
-from .forms import TagForm, AccountForm, TodoItemForm
+from .models import Tag, TodoItem, Account
+from .forms import (
+    TagForm,
+    AccountForm,
+    TodoItemForm,
+    TodoUserForm,
+)
 
 
 class TodoDetail(DetailView):
@@ -78,3 +90,60 @@ def post_form(request, item):
 
     context = {'form': form, 'submitted': submitted, 'title': title, 'tags': tags}
     return render(request, 'todo_app/post_base.html', context=context)
+
+
+def register(request):
+    if request.method == "POST":
+        user_form = TodoUserForm(request.POST)
+
+        print(f"Is Bound: {user_form.is_bound}")
+        print(f"Is Valid: {user_form.is_valid()}")
+        print(f"Errors: {user_form.errors}")
+
+        if user_form.is_valid():
+            print("Form is valid")
+            user = user_form.save()
+            print(f"Saved User: {user}")
+            account = Account.objects.create(usr=user)
+            print(f"Created Account: {account}")
+            account.save()
+            print(f"Saved Account: {account}")
+            login(request, user)
+            messages.success(request, "Registration successful.")
+            return redirect("get_todoitems")
+
+        print("Form is invalid")
+        messages.error(request, "Unsuccessful registration. Invalid information.")
+
+    form = TodoUserForm()
+    return render(request=request,
+                  template_name="registration/registration.html",
+                  context={"register_form": form})
+
+
+def login_request(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"Logged in as {username}.")
+                return redirect("get_todoitems")
+            else:
+                messages.error(request, "Invalid username or password.")
+        else:
+            messages.error(request, "Invalid username or password.")
+
+    form = AuthenticationForm()
+    return render(request=request,
+                  template_name="registration/login.html",
+                  context={"login_form": form})
+
+
+def logout_request(request):
+    logout(request)
+    messages.info(request, "Logged out.")
+    return redirect("log_in")

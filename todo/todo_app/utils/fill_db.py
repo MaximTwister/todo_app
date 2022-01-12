@@ -1,7 +1,7 @@
 from random import randint, choice
 
-from django.db.models import Count
 from faker import Faker
+from django.db.models import Count
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
