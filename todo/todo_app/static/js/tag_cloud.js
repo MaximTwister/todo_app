@@ -1,8 +1,11 @@
-console.log("STARTED")
+console.log("START")
+
 let tags_list = document.getElementById('tag_container')
 let tag_text = tags_list.innerHTML.replace(/<.*?>/g," ").replace(/ +/g," ")
 
 let tags = tag_text.split(';')
+tags.pop()
+
 
 for (element of tags){
     let newTag = document.createElement('div')
@@ -10,7 +13,7 @@ for (element of tags){
     newTag.id = element
     let a = document.createElement('a')
 
-    a.setAttribute('href', '#')
+    a.setAttribute('href', '#.')
     a.textContent = element
 
     document.getElementById('list_id').appendChild(newTag);
@@ -22,7 +25,7 @@ for (element of tags){
 [...document.querySelectorAll('.item')].forEach(function(item) {
     item.addEventListener('click', function() {
         let selected_tag = item.cloneNode(true)
-        selected_tag.className = 'selected';
+        selected_tag.className = 'selected_tag';
         selected_tag.firstChild.insertAdjacentHTML("beforeend", '<button class="remove-button"></button>');
         selected_tag.firstChild.addEventListener('click', function(){
             selected_tag.remove()
@@ -33,7 +36,7 @@ for (element of tags){
         let child = document.getElementById(item.id)
         if (form.contains(child)=== false ){
             form.appendChild(selected_tag)
-            item.className ='selected'
+            item.className ='selected_option'
         }
     })
 })
@@ -47,3 +50,9 @@ function widget_handler(tag, bool){
 
 let widget = document.querySelector('.tag_widget')
 widget.style.display = 'none'
+
+let labels = document.getElementsByTagName('label');
+    for (let i of labels){
+        if(i.htmlFor === 'id_tags'){
+        i.hidden = true}
+}

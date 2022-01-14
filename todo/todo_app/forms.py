@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Tag, TodoItem, Account
+from .models import Tag, TodoItem, Account,Group
 
 from django.contrib.auth.models import User
 
@@ -15,8 +15,8 @@ class AccountForm(ModelForm):
     class Meta:
         model = Account
         fields = ['group', 'telegram_id']
-        # TODO Create Group Droplist (Andrew)
-        group = forms.CharField(max_length=50)
+        widgets = {'group': forms.Select}
+        group = forms.ModelChoiceField(queryset=Group.objects.all())
         telegram_id = forms.IntegerField()
 
     def clean_telegram_id(self):
