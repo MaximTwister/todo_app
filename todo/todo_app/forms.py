@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Tag, TodoItem, Account
+from .models import Tag, TodoItem, Account, Group
 
 from django.contrib.auth.models import User
 
@@ -44,3 +44,10 @@ class TodoItemForm(ModelForm):
         content = forms.CharField()
         assignee = CustomChoiceField(queryset=User.objects.all())
         tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all())
+
+
+class GroupForm(ModelForm):
+    class Meta:
+        model = Group
+        fields = ['title']
+        title = forms.CharField(max_length=255)
