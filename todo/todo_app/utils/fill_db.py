@@ -48,18 +48,19 @@ def create_users(users_amount=100):
         )
         user.save()
         account = Account.objects.create(
+            slug=username,
             telegram_id=fkr.numerify(text=('#' * 10)),
             usr=user,
         )
         group = get_not_full_group(group_max_participants=5)
         if group:
-            account.group.add()
+            account.account_groups.add(group)
         else:
             print("No empty groups left. Stop creating users. Exit")
             break
 
 
-def update_tags():
+def create_tags():
     exist_tags = list(Tag.objects.values_list("title", flat=True))
     new_tags = [Tag(title=tag) for tag in tags if tag not in exist_tags]
     Tag.objects.bulk_create(new_tags)

@@ -31,11 +31,11 @@ class TodoItem(models.Model):
 
 
 class Account(models.Model):
-    telegram_id = models.BigIntegerField(blank=False)
-    group = models.ManyToManyField(
+    slug = models.SlugField(max_length=100, unique=True)
+    telegram_id = models.BigIntegerField(blank=True, null=True)
+    account_groups = models.ManyToManyField(
         "Group",
         blank=True,
-        null=True,
         related_name="accounts"
     )
     is_active = models.BooleanField(default=True)
@@ -47,11 +47,14 @@ class Account(models.Model):
     )
 
     def __str__(self):
-        return f'{self.usr}: {self.group}: {self.telegram_id}'
+        return f'{self.usr}: {self.account_groups.all()}: {self.telegram_id}'
 
 
 class Group(models.Model):
     title = models.CharField(max_length=50, blank=False)
+
+    def __str__(self):
+        return self.title
 
 
 # TODO tags MUST be unique (Andrew)

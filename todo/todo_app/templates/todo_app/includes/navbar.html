@@ -1,24 +1,38 @@
 {% load static %}
 
 <ul class="nav justify-content-center nav-pills main">
-  <li class="nav-item item-padding">
-    <a class="navbar-brand">
-        <img src="{% static 'img/logo.png' %}" height="40" width="60" alt=""></a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" aria-current="page" href="{% url 'get_todoitems' %}">Show Todos</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="{% url 'post_form' item='todoitem' %}">Create Todo</a>
-  </li>
+    <li class="nav-item item-padding">
+        <a class="navbar-brand">
+            <img src="{% static 'img/logo.png' %}" height="40" width="60" alt=""></a>
+    </li>
     <li class="nav-item">
-    <a class="nav-link" href="{% url 'post_form' item='tag' %}">Create Tag</a>
-  </li>
+        <a class="nav-link" aria-current="page" href="{% url 'get_todoitems' %}">Show
+            Todos</a>
+    </li>
     <li class="nav-item">
-    <a class="nav-link" href="{% url 'post_form' item='user' %}">Create User</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link active" href="#">LogIn</a>
-  </li>
+        <a class="nav-link" href="{% url 'post_form' item='todoitem' %}">Create Todo</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'post_form' item='tag' %}">Create Tag</a>
+    </li>
+
+    {% if not user.is_authenticated %}
+        <li class="nav-item">
+            <a class="nav-link active" href="{% url 'log_in' %}">Log In</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="{% url 'register' %}">Sign Up</a>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'account' slug=user.get_username %}">
+                <em class="fas fa-user"></em>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="{% url 'log_out' %}">Logout</a>
+        </li>
+    {% endif %}
+
 </ul>
 

@@ -13,17 +13,24 @@ class TagForm(ModelForm):
 
 
 class AccountForm(ModelForm):
+    request_join_group = forms.CharField(max_length=50, required=False)
+    telegram_id = forms.CharField()
+
     class Meta:
         model = Account
-        fields = ['group', 'telegram_id']
-        # TODO Create Group Droplist (Andrew)
-        group = forms.CharField(max_length=50)
-        telegram_id = forms.IntegerField()
+        fields = ['telegram_id']
+        # TODO Create Group Drop-list (Andrew)
 
     def clean_telegram_id(self):
-        telegram = self.cleaned_data.get('telegram_id')
-        if len(str(telegram)) != 10:
-            raise forms.ValidationError('You must enter a valid telegram id', code='invalid')
+        telegram_id = self.cleaned_data.get('telegram_id')
+        print(f"FORM TELEGRAM ID: {telegram_id} = {len(str(telegram_id))}")
+        print(f"FORM CLEANED DATA: {self.cleaned_data}")
+        if len(str(telegram_id)) != 10:
+            raise forms.ValidationError('Not valid Telegram ID', code='invalid')
+
+        # Always return a value to use as the new cleaned data,
+        # even if this method didn't change it.
+        return telegram_id
 
 
 class CustomChoiceField(forms.ModelChoiceField):
@@ -48,18 +55,7 @@ class TodoItemForm(ModelForm):
 
 
 class TodoUserForm(UserCreationForm):
-    telegram_id = forms.IntegerField(required=True)
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.telegram_id = self.cleaned_data["telegram_id"]
-        if commit:
-            print(f"Form User: {user}")
-            user.save()
-            print(f"Form Saved User: {user}")
-
-        return user
 
     class Meta:
         model = User
-        fields = ("username", "telegram_id", "password1", "password2")
+        fields = ("username", "password1", "password2")

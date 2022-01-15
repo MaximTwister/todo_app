@@ -3,6 +3,8 @@ import json
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import forms
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
@@ -11,6 +13,7 @@ from django.views.generic import (
     DetailView,
     DeleteView,
 )
+from django.views.generic.edit import FormMixin, UpdateView
 
 from .models import Tag, TodoItem, Account
 from .forms import (
@@ -33,6 +36,7 @@ class TodoDetail(DetailView):
             pk = self.kwargs.get("pk")
             body = json.loads(request.body)
             todoitem = TodoItem.objects.get(pk=pk)
+            print(f"Patch Body: {body}")
             todoitem.content = body.get("content")
             todoitem.title = body.get("title")
             todoitem.save()
@@ -47,13 +51,16 @@ class TodoDelete(DeleteView):
     success_url = reverse_lazy("get_todoitems")
 
 
-class TodoItemsList(ListView):
+class TodoItemsList(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+    # redirect_field_name = 'redirect_to'
+
     model = TodoItem
     template_name = "todo_app/todoitems.html"
     context_object_name = "todoitems"
 
     def get_queryset(self):
-        filter_kwargs = {}
+        filter_kwargs = {"owner": self.request.user}
         if "tag" in self.kwargs:
             tag_title = self.kwargs.get("tag")
             tag = Tag.objects.get(title=tag_title)
@@ -61,6 +68,39 @@ class TodoItemsList(ListView):
         print(filter_kwargs)
         qs = super().get_queryset()
         return qs.filter(**filter_kwargs)
+
+
+class AccountUpdate(FormMixin, DetailView):
+    model = Account
+    template_name = "todo_app/post_base.html"
+    form_class = AccountForm
+
+    def get_success_url(self):
+        return reverse_lazy("get_todoitems")
+
+    def get_context_data(self, **kwargs):
+        print(f"Object: {self.object}")
+        context = super().get_context_data(**kwargs)
+        context['form'] = AccountForm(initial={
+            'telegram_id': self.object.telegram_id,
+        })
+        context["account_groups"] = self.object.account_groups.all()
+        print(f"Context: {context['form']}")
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form: AccountForm = self.get_form()
+        print(f"Form is valid: {form.is_valid()}")
+        print(f"FORM : {form}")
+        if form.is_valid():
+            print(f"Form is valid: {form.cleaned_data}")
+            self.object.telegram_id = form.cleaned_data["telegram_id"]
+            self.object.save()
+            return super().form_valid(form)
+        else:
+            print(f"Form is not valid: {form.errors}")
+            return self.form_invalid(form)
 
 
 # TODO probably move to CBV (Anton)
@@ -80,8 +120,13 @@ def post_form(request, item):
 
     if request.method == 'POST':
         form = form(request.POST)
-        if form.is_valid():
-            form.save()
+        owner = request.user
+        if owner and form.is_valid():
+            new_todo_item = form.save()
+            print(owner)
+            print(new_todo_item)
+            new_todo_item.owner = owner
+            new_todo_item.save()
             return HttpResponseRedirect('?submitted=True')
 
     elif request.method == 'GET':
@@ -101,10 +146,13 @@ def register(request):
         print(f"Errors: {user_form.errors}")
 
         if user_form.is_valid():
-            print("Form is valid")
             user = user_form.save()
-            print(f"Saved User: {user}")
-            account = Account.objects.create(usr=user)
+            username = user.username
+            print(f"Saved User: {user} with username: {username}")
+            account = Account.objects.create(
+                slug=username,
+                usr=user,
+            )
             print(f"Created Account: {account}")
             account.save()
             print(f"Saved Account: {account}")
