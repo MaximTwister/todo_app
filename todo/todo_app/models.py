@@ -54,6 +54,9 @@ class Group(models.Model):
     title = models.CharField(max_length=50,
                              blank=False,
                              verbose_name='Group name')
+    
+    def __str__(self):
+        return self.title
 
 
 # TODO tags MUST be unique (Andrew)
