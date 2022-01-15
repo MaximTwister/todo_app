@@ -31,8 +31,8 @@ class TodoItem(models.Model):
 
 
 class Account(models.Model):
-    slug = models.SlugField(max_length=100, unique=True)
-    telegram_id = models.BigIntegerField(blank=True, null=True)
+    slug = models.SlugField(max_length=50, unique=True)
+    telegram_id = models.BigIntegerField(blank=False, null=True)
     account_groups = models.ManyToManyField(
         "Group",
         blank=True,
@@ -51,15 +51,19 @@ class Account(models.Model):
 
 
 class Group(models.Model):
-    title = models.CharField(max_length=50, blank=False)
+    title = models.CharField(max_length=50,
+                             blank=False,
+                             unique=True,
+                             verbose_name='Group name')
 
     def __str__(self):
         return self.title
 
 
-# TODO tags MUST be unique (Andrew)
 class Tag(models.Model):
-    title = models.CharField(max_length=100, blank=False)
+    title = models.CharField(max_length=100,
+                             blank=False,
+                             verbose_name='Tag name')
 
     def __str__(self):
         return f'{self.title}'

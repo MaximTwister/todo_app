@@ -1,9 +1,9 @@
 from django import forms
-from django.forms import ModelForm
-from .models import Tag, TodoItem, Account
-
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.forms import ModelForm
+
+from .models import Tag, TodoItem, Account, Group
 
 
 class TagForm(ModelForm):
@@ -13,23 +13,20 @@ class TagForm(ModelForm):
 
 
 class AccountForm(ModelForm):
+    telegram_id = forms.CharField(max_length=10, required=False)
     request_join_group = forms.CharField(max_length=50, required=False)
-    telegram_id = forms.CharField()
 
     class Meta:
         model = Account
         fields = ['telegram_id']
-        # TODO Create Group Drop-list (Andrew)
+        # widgets = {'account_groups': forms.Select}
 
     def clean_telegram_id(self):
         telegram_id = self.cleaned_data.get('telegram_id')
-        print(f"FORM TELEGRAM ID: {telegram_id} = {len(str(telegram_id))}")
-        print(f"FORM CLEANED DATA: {self.cleaned_data}")
         if len(str(telegram_id)) != 10:
-            raise forms.ValidationError('Not valid Telegram ID', code='invalid')
+            raise forms.ValidationError('not valid telegram id', code='invalid')
 
-        # Always return a value to use as the new cleaned data,
-        # even if this method didn't change it.
+        # Must always return data
         return telegram_id
 
 
@@ -52,6 +49,13 @@ class TodoItemForm(ModelForm):
         content = forms.CharField()
         assignee = CustomChoiceField(queryset=User.objects.all())
         tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all())
+
+
+class GroupForm(ModelForm):
+    class Meta:
+        model = Group
+        fields = ['title']
+        title = forms.CharField(max_length=255)
 
 
 class TodoUserForm(UserCreationForm):

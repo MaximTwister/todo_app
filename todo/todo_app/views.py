@@ -1,26 +1,32 @@
 import json
 
+from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import forms
-from django.shortcuts import render, redirect
+from django.contrib.auth import (
+    login,
+    logout,
+    authenticate
+)
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
+from django.views.generic.edit import FormMixin
 from django.views.generic import (
     ListView,
     DetailView,
-    DeleteView,
+    DeleteView
 )
-from django.views.generic.edit import FormMixin, UpdateView
-
-from .models import Tag, TodoItem, Account
+from .models import (
+    Tag,
+    TodoItem,
+    Account
+)
 from .forms import (
     TagForm,
     AccountForm,
     TodoItemForm,
-    TodoUserForm,
+    GroupForm, TodoUserForm
 )
 
 
@@ -36,7 +42,6 @@ class TodoDetail(DetailView):
             pk = self.kwargs.get("pk")
             body = json.loads(request.body)
             todoitem = TodoItem.objects.get(pk=pk)
-            print(f"Patch Body: {body}")
             todoitem.content = body.get("content")
             todoitem.title = body.get("title")
             todoitem.save()
@@ -52,8 +57,8 @@ class TodoDelete(DeleteView):
 
 
 class TodoItemsList(LoginRequiredMixin, ListView):
-    login_url = '/login/'
-    # redirect_field_name = 'redirect_to'
+    login_url = reverse_lazy("log_in")
+    redirect_field_name = reverse_lazy("get_todoitems")
 
     model = TodoItem
     template_name = "todo_app/todoitems.html"
@@ -75,40 +80,37 @@ class AccountUpdate(FormMixin, DetailView):
     template_name = "todo_app/post_base.html"
     form_class = AccountForm
 
-    def get_success_url(self):
-        return reverse_lazy("get_todoitems")
-
     def get_context_data(self, **kwargs):
-        print(f"Object: {self.object}")
         context = super().get_context_data(**kwargs)
-        context['form'] = AccountForm(initial={
-            'telegram_id': self.object.telegram_id,
+        context["form"] = AccountForm(initial={
+            "telegram_id": self.object.telegram_id,
         })
         context["account_groups"] = self.object.account_groups.all()
-        print(f"Context: {context['form']}")
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form: AccountForm = self.get_form()
-        print(f"Form is valid: {form.is_valid()}")
-        print(f"FORM : {form}")
+        form = self.get_form()
+        print(f"Form is_valid: {form.is_valid}")
         if form.is_valid():
-            print(f"Form is valid: {form.cleaned_data}")
-            self.object.telegram_id = form.cleaned_data["telegram_id"]
+            print(f"Form cleaned_data: {form.cleaned_data}")
+            self.object.telegram_id = form.cleaned_data.get("telegram_id")
             self.object.save()
             return super().form_valid(form)
         else:
             print(f"Form is not valid: {form.errors}")
             return self.form_invalid(form)
 
+    def get_success_url(self):
+        return reverse_lazy("get_todoitems")
+
 
 # TODO probably move to CBV (Anton)
 def post_form(request, item):
     forms_mapping = {
-        'user': ('Create user', AccountForm),
         'tag': ('Create tag', TagForm),
         'todoitem': ('Create todoitem', TodoItemForm),
+        'account_groups': ('Create account_groups', GroupForm)
     }
 
     title, form = forms_mapping[item]
@@ -123,8 +125,6 @@ def post_form(request, item):
         owner = request.user
         if owner and form.is_valid():
             new_todo_item = form.save()
-            print(owner)
-            print(new_todo_item)
             new_todo_item.owner = owner
             new_todo_item.save()
             return HttpResponseRedirect('?submitted=True')
@@ -148,50 +148,51 @@ def register(request):
         if user_form.is_valid():
             user = user_form.save()
             username = user.username
-            print(f"Saved User: {user} with username: {username}")
             account = Account.objects.create(
                 slug=username,
-                usr=user,
+                usr=user
             )
-            print(f"Created Account: {account}")
             account.save()
-            print(f"Saved Account: {account}")
             login(request, user)
-            messages.success(request, "Registration successful.")
+            messages.success(request, "Registration successful")
             return redirect("get_todoitems")
 
-        print("Form is invalid")
-        messages.error(request, "Unsuccessful registration. Invalid information.")
+        print(f"Form is invalid: {user_form.errors}")
+        messages.error(request, "Unsuccessful registration. Invalid info")
 
+    print("Create ToDoUserForm")
     form = TodoUserForm()
     return render(request=request,
-                  template_name="registration/registration.html",
-                  context={"register_form": form})
+                  template_name="registration_templates/registration.html",
+                  context={"register_form": form}
+                  )
 
 
 def login_request(request):
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.info(request, f"Logged in as {username}.")
+                messages.info(request, f"Logged in as {username}")
                 return redirect("get_todoitems")
             else:
-                messages.error(request, "Invalid username or password.")
+                messages.error(request, "Invalid username or password")
         else:
-            messages.error(request, "Invalid username or password.")
+            messages.error(request, "Invalid username or password")
 
     form = AuthenticationForm()
-    return render(request=request,
-                  template_name="registration/login.html",
-                  context={"login_form": form})
+    return render(
+        request=request,
+        template_name="registration_templates/login.html",
+        context={"login_form": form}
+    )
 
 
 def logout_request(request):
     logout(request)
-    messages.info(request, "Logged out.")
+    messages.info(request, "Logged out")
     return redirect("log_in")
