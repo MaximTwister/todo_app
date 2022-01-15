@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, DeleteView
 
 from .models import Tag, Account, TodoItem
-from .forms import TagForm, AccountForm, TodoItemForm
+from .forms import TagForm, AccountForm, TodoItemForm, GroupForm
 
 
 class TodoDetail(DetailView):
@@ -57,6 +57,7 @@ def post_form(request, item):
         'user': ('Create user', AccountForm),
         'tag': ('Create tag', TagForm),
         'todoitem': ('Create todoitem', TodoItemForm),
+        'group': ('Create group', GroupForm)
     }
 
     title, form = forms_mapping[item]
