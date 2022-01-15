@@ -52,6 +52,7 @@ class Account(models.Model):
 class Group(models.Model):
     title = models.CharField(max_length=50,
                              blank=False,
+                             unique=True,
                              verbose_name='Group name')
     
     def __str__(self):
