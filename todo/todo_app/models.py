@@ -51,12 +51,16 @@ class Account(models.Model):
 
 
 class Group(models.Model):
-    title = models.CharField(max_length=50, blank=False)
+    title = models.CharField(max_length=50,
+                             blank=False,
+                             verbose_name='Group name')
 
 
 # TODO tags MUST be unique (Andrew)
 class Tag(models.Model):
-    title = models.CharField(max_length=100, blank=False)
+    title = models.CharField(max_length=100,
+                             blank=False,
+                             verbose_name='Tag name')
 
     def __str__(self):
         return f'{self.title}'

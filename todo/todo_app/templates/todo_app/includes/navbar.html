@@ -1,6 +1,6 @@
 {% load static %}
 
-<ul class="nav justify-content-center nav-pills main">
+<ul class="nav justify-content nav-pills main">
   <li class="nav-item item-padding">
     <a class="navbar-brand">
         <img src="{% static 'img/logo.png' %}" height="40" width="60" alt=""></a>
@@ -18,7 +18,7 @@
     <a class="nav-link" href="{% url 'post_form' item='user' %}">Create User</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link active" href="#">LogIn</a>
+    <a class="nav-link" href="{% url 'post_form' item='group' %}">Create Group</a>
   </li>
 </ul>
 
