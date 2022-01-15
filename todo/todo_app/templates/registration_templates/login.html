@@ -1,0 +1,25 @@
+{% extends "todo_app/base.html" %}
+
+{% block content %}
+
+    {% include "todo_app/includes/messages.html" %}
+
+    <div class="container">
+        <h1>Login</h1>
+         <!-- TODO Artem: Make form NICE-->
+        <form method="POST">
+            {% csrf_token %}
+            {{ login_form }}
+            <button class="btn btn-primary" type="submit">
+                Login
+            </button>
+        </form>
+
+        <p class="text-center">
+            If you don't have an account,
+            <a href="{% url 'register' %}">Sign Up</a>
+            instead
+        </p>
+    </div>
+
+{% endblock %}

@@ -31,8 +31,9 @@ class TodoItem(models.Model):
 
 
 class Account(models.Model):
-    telegram_id = models.BigIntegerField(blank=False)
-    group = models.ManyToManyField(
+    slug = models.SlugField(max_length=50, unique=True)
+    telegram_id = models.BigIntegerField(blank=False, null=True)
+    account_groups = models.ManyToManyField(
         "Group",
         blank=True,
         related_name="accounts"
@@ -46,7 +47,7 @@ class Account(models.Model):
     )
 
     def __str__(self):
-        return f'{self.usr}: {self.group}: {self.telegram_id}'
+        return f'{self.usr}: {self.account_groups}: {self.telegram_id}'
 
 
 class Group(models.Model):
@@ -57,9 +58,6 @@ class Group(models.Model):
     
     def __str__(self):
         return self.title
-
-    def __str__(self):
-        return f'{self.title}'
 
 
 class Tag(models.Model):

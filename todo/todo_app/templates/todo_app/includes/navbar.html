@@ -5,20 +5,40 @@
     <a class="navbar-brand">
         <img src="{% static 'img/logo.png' %}" height="40" width="60" alt=""></a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" aria-current="page" href="{% url 'get_todoitems' %}">Show Todos</a>
+
+  <li class="nav-item dropdown">
+      {% include "todo_app/includes/dropdowns/todo.html" %}
   </li>
+
   <li class="nav-item">
-    <a class="nav-link" href="{% url 'post_form' item='todoitem' %}">Create Todo</a>
+      {% include "todo_app/includes/dropdowns/group.html" %}
   </li>
+
     <li class="nav-item">
     <a class="nav-link" href="{% url 'post_form' item='tag' %}">Create Tag</a>
   </li>
+
+    {% if not user.is_authenticated %}
     <li class="nav-item">
-    <a class="nav-link" href="{% url 'post_form' item='user' %}">Create User</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="{% url 'post_form' item='group' %}">Create Group</a>
-  </li>
+        <a class="nav-link" href="{% url 'log_in' %}">Log In</a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'register' %}">Sign Up</a>
+    </li>
+
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'account' slug=user.get_username %}">
+                <em class="fas fa-user-circle"></em>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'log_out' %}">Logout</a>
+        </li>
+
+    {% endif %}
+
 </ul>
 

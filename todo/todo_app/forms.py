@@ -1,8 +1,9 @@
 from django import forms
-from django.forms import ModelForm
-from .models import Tag, TodoItem, Account, Group
-
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.forms import ModelForm
+
+from .models import Tag, TodoItem, Account, Group
 
 
 class TagForm(ModelForm):
@@ -12,17 +13,21 @@ class TagForm(ModelForm):
 
 
 class AccountForm(ModelForm):
+    telegram_id = forms.CharField(max_length=10, required=False)
+    request_join_group = forms.CharField(max_length=50, required=False)
+
     class Meta:
         model = Account
-        fields = ['group', 'telegram_id']
-        widgets = {'group': forms.Select}
-        group = forms.ModelChoiceField(queryset=Group.objects.all())
-        telegram_id = forms.IntegerField()
+        fields = ['telegram_id']
+        # widgets = {'account_groups': forms.Select}
 
     def clean_telegram_id(self):
-        telegram = self.cleaned_data.get('telegram_id')
-        if len(str(telegram)) != 10:
-            raise forms.ValidationError('You must enter a valid telegram id', code='invalid')
+        telegram_id = self.cleaned_data.get('telegram_id')
+        if len(str(telegram_id)) != 10:
+            raise forms.ValidationError('not valid telegram id', code='invalid')
+
+        # Must always return data
+        return telegram_id
 
 
 class CustomChoiceField(forms.ModelChoiceField):
@@ -51,3 +56,10 @@ class GroupForm(ModelForm):
         model = Group
         fields = ['title']
         title = forms.CharField(max_length=255)
+
+
+class TodoUserForm(UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = ("username", "password1", "password2")

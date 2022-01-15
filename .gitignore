@@ -130,3 +130,6 @@ dmypy.json
 
 # PyCharm Staff
 .idea/
+
+# MacOS staff
+.DS_Store

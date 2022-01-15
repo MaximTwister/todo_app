@@ -53,7 +53,7 @@ def create_users(users_amount=100):
         )
         group = get_not_full_group(group_max_participants=5)
         if group:
-            account.group.add()
+            account.account_groups.add()
         else:
             print("No empty groups left. Stop creating users. Exit")
             break
