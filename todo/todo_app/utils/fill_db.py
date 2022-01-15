@@ -38,7 +38,7 @@ def get_not_full_group(group_max_participants):
 def create_users(users_amount=100):
     for _ in range(users_amount):
         first_name, last_name, *_ = fkr.name().split(" ")
-        username = "".join([first_name.lower(), last_name.lower()])
+        username = " ".join([first_name.lower(), last_name.lower()])
         password = "SuperStrongPass123"
         user = User.objects.create_user(
             first_name=first_name,

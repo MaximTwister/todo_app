@@ -35,7 +35,6 @@ class Account(models.Model):
     group = models.ManyToManyField(
         "Group",
         blank=True,
-        null=True,
         related_name="accounts"
     )
     is_active = models.BooleanField(default=True)
@@ -58,8 +57,10 @@ class Group(models.Model):
     def __str__(self):
         return self.title
 
+    def __str__(self):
+        return f'{self.title}'
 
-# TODO tags MUST be unique (Andrew)
+
 class Tag(models.Model):
     title = models.CharField(max_length=100,
                              blank=False,
