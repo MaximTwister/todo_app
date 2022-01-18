@@ -11,7 +11,7 @@ from django.contrib.auth import (
 )
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
-from django.views.generic.edit import FormMixin
+from django.views.generic.edit import FormMixin, FormView
 from django.views.generic import (
     ListView,
     DetailView,
@@ -105,7 +105,57 @@ class AccountUpdate(FormMixin, DetailView):
         return reverse_lazy("get_todoitems")
 
 
-# TODO probably move to CBV (Anton)
+class PostForm(FormView):
+    template_name = 'todo_app/post_base.html'
+    title = 'YOU NEED A TITLE'
+
+    def form_valid(self, form, **kwargs):
+        form.save()
+        return render(template_name='todo_app/success_post_base.html', request=None)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = self.title
+        return context
+
+
+class PostTag(PostForm):
+    title = 'Create Tag'
+    form_class = TagForm
+
+
+class PostGroup(PostForm):
+    title = 'Create Group'
+    form_class = GroupForm
+
+
+class PostTodoitem(PostForm):
+    title = 'Create TodoItems'
+    form_class = TodoItemForm
+    tags = Tag.objects.all()
+    owner = None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = self.title
+        context['tags'] = self.tags
+        return context
+
+    def form_valid(self, form, **kwargs):
+        new_todo_item = form.save()
+        new_todo_item.owner = self.owner
+        new_todo_item.save()
+        return render(template_name='todo_app/success_post_base.html', request=None)
+
+    def post(self, request, *args, **kwargs):
+        self.owner = request.user
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+
 def post_form(request, item):
     forms_mapping = {
         'tag': ('Create tag', TagForm),
