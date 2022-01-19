@@ -1,0 +1,10 @@
+{% if account_messages %}
+    <ul class="messages">
+        {% for message in account_messages %}
+            <li {% if message.severity %} class="{{ message.severity }}" {% endif %}>
+                {{ message }}
+                <a href={{ message.get_absolute_url }}>Ok</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

@@ -4,6 +4,7 @@ from todo_app import views
 
 
 urlpatterns = [
+    path("", views.login_request, name="log_in"),
     path("admin/", admin.site.urls),
     path("todo/", include("todo_app.urls")),
     path("register/", views.register, name="register"),

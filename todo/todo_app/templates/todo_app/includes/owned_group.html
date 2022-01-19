@@ -1,0 +1,56 @@
+<div class="card">
+  <div class="card-header">
+      {{ group }}
+  </div>
+  <div class="card-body" id="group_{{ forloop.counter }}">
+    {% csrf_token %}
+    <h5 class="card-title">Handle join requests and manage your group.</h5>
+
+      <button type="button"
+              class="btn btn-primary position-relative"
+              onClick="toggleRequests(event, {{ forloop.counter }})">
+          Requests to join
+          {% if group.accounts_want_to_subscribe.all %}
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+              {{ group.accounts_want_to_subscribe.all|length }}
+          </span>
+          {% endif %}
+      </button>
+
+      <button type="button"
+              class="btn btn-primary position-relative"
+              onClick="toggleSubscribers(event, {{ forloop.counter }})">
+          Subscribers
+      </button>
+
+      <button type="button"
+              class="btn btn-primary position-relative"
+              id="delete"
+              onClick="openModal('group', 'delete', {{ group.pk }})">
+          Delete Group
+      </button>
+
+    <div class="hide_requests_block" id="requests_block_{{ forloop.counter }}">
+        <p>Subscribe Requests:</p>
+        {% for account in group.accounts_want_to_subscribe.all %}
+            {{ account.usr.username }}
+            <button onClick="editGroupSubscribers({{ group.pk }}, {{ account.pk }}, 'add')">
+                Add to group
+            </button>
+            <button onClick="editGroupSubscribers({{ group.pk }}, {{ account.pk }}, 'reject')">
+                Reject
+            </button>
+        {% endfor %}
+    </div>
+
+    <div class="hide_subscribers_block" id="subscribers_block_{{ forloop.counter }}">
+        <p>Group Subscribers:</p>
+        {% for account in group.subscribed_accounts.all %}
+            {{ account.usr.username }}
+            <button onClick="editGroupSubscribers({{ group.pk }}, {{ account.pk }}, 'del')">
+                Delete from Group
+            </button>
+        {% endfor %}
+    </div>
+  </div>
+</div>

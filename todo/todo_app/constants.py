@@ -5,6 +5,9 @@ all_tags = [
     "docker", "database", "python", "java", "go",
     "webserver", "backend", "frontend",
 ]
+
+groups = ("Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel",)
+
 # os = ["ubuntu", "windows", "vmware", "vsphere", "redhat", "debian"]
 # severity = ["warning", "bug", "degradation", "error", "critical"]
 # infrastructure = ["cloud", "cluster", "container"]

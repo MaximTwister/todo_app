@@ -10,6 +10,14 @@
     display: none !important;
 }
 
+.hide_requests_block {
+    display: none !important;
+}
+
+.hide_subscribers_block {
+    display: none !important;
+}
+
 .edit-icon {
     margin-inline: 15px;
 }

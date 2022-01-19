@@ -1,0 +1,16 @@
+<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Groups</a>
+    <ul class="dropdown-menu">
+
+        <li>
+          <a class="dropdown-item" href="{% url 'create_group' %}">Create Group</a>
+        </li>
+
+        <li>
+            <a class="dropdown-item" href="{% url 'get_groups' group_type="owned-groups" %}">My Groups</a>
+        </li>
+
+        <li>
+            <a class="dropdown-item" href="{% url 'get_groups' group_type="subscribed-groups" %}">Subscriptions</a>
+        </li>
+
+    </ul>

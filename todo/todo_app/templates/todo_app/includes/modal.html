@@ -1,16 +1,16 @@
-<div class="modal" id="deleteModal" tabindex="-1">
+<div class="modal" id="operationModal" tabindex="-1">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Delete Todo</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title" id="modal_title"></h5>
+        <button id="modal_small_close_button" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Are we going to delete this Todo?</p>
+        <p id="modal_paragraph"></p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-warning">Delete</button>
-        <button type="button" class="btn btn-secondary">Close</button>
+        <button id="modal_operation_button" type="button" class="btn btn-warning">Delete</button>
+        <button id="modal_close_button" type="button" class="btn btn-secondary">Close</button>
       </div>
     </div>
   </div>

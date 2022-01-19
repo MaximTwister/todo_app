@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.forms import ModelForm
 
 from .models import Tag, TodoItem, Account, Group
@@ -36,9 +37,24 @@ class CustomChoiceField(forms.ModelChoiceField):
 
 
 class TodoItemForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+        if user:
+            user_groups = Group.objects.filter(subscribed_accounts=user.account)
+            user_groups_ids = [group.id for group in user_groups]
+            assignee = User.objects.filter(
+                Q(account__subscribed_groups__in=user_groups_ids) &
+                ~Q(pk=user.pk)
+            )
+            print(f"USER: {user} have groups: {user_groups}")
+            print(f"Assignees: {assignee}")
+            self.fields['group'].queryset = user_groups
+            self.fields['assignee'].queryset = assignee
+
     class Meta:
         model = TodoItem
-        fields = ['title', 'content', 'assignee', 'tags']
+        fields = ['title', 'content', 'assignee', 'group', 'tags']
         widgets = {
             'tags': forms.SelectMultiple(attrs={'class': 'tag_widget'}),
             'title': forms.Textarea(attrs={'rows': 2}),
@@ -47,7 +63,6 @@ class TodoItemForm(ModelForm):
         field_classes = {'assignee': CustomChoiceField}
         title = forms.CharField()
         content = forms.CharField()
-        assignee = CustomChoiceField(queryset=User.objects.all())
         tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all())
 
 

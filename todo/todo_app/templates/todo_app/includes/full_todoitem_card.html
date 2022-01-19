@@ -9,7 +9,11 @@
 
             <div class="card-body">
                 {% csrf_token %}
-                <p class="card-text" id="todo_content">{{ todoitem.content }}</p>
+                <p class="card-text" id="todo_content">
+                    {% autoescape off %}
+                    {{ todoitem.content|linebreaksbr }}
+                    {% endautoescape %}
+                </p>
 
                 <div class="d-flex">
                     <div>
@@ -21,7 +25,7 @@
                     </div>
 
                     <div class="ms-auto">
-                        <a href="#" class="btn btn-warning" id="delete" onClick="openModal()">Delete</a>
+                        <a href="#" class="btn btn-warning" id="delete" onClick="openModal('todo', 'delete')">Delete</a>
                     </div>
                 </div>
 

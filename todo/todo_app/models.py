@@ -8,14 +8,23 @@ class TodoItem(models.Model):
     content = models.TextField(blank=False)
     creation_date = models.DateTimeField(auto_now_add=True)
     last_edit_date = models.DateTimeField(auto_now=True)
-    assignee = models.ForeignKey(User,
-                                 on_delete=models.SET_NULL,
-                                 null=True,
-                                 related_name='assigned_todo_items')
-    owner = models.ForeignKey(User,
-                              on_delete=models.SET_NULL,
-                              null=True,
-                              related_name='self_todo_items')
+    assignee = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='assigned_todo_items')
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='self_todo_items'
+    )
+    group = models.ForeignKey(
+        "Group",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='todo_items'
+    )
     tags = models.ManyToManyField('Tag',
                                   blank=False,
                                   related_name='todo_items')
@@ -32,13 +41,14 @@ class TodoItem(models.Model):
 
 class Account(models.Model):
     slug = models.SlugField(max_length=50, unique=True)
+    is_active = models.BooleanField(default=True)
     telegram_id = models.BigIntegerField(blank=False, null=True)
-    account_groups = models.ManyToManyField(
+
+    subscribed_groups = models.ManyToManyField(
         "Group",
         blank=True,
-        related_name="accounts"
+        related_name="subscribed_accounts"
     )
-    is_active = models.BooleanField(default=True)
     usr = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
@@ -47,14 +57,52 @@ class Account(models.Model):
     )
 
     def __str__(self):
-        return f'{self.usr}: {self.account_groups.all()}: {self.telegram_id}'
+        return f'{self.usr}: {self.subscribed_groups.all()}: {self.telegram_id}'
+
+
+class Message(models.Model):
+    text = models.TextField(max_length=200)
+    message_date = models.DateTimeField(auto_now_add=True)
+    severity = models.CharField(max_length=20, default="info")
+    acknowledged = models.BooleanField(default=False)
+    account = models.ForeignKey(
+        Account,
+        on_delete=models.CASCADE,
+        related_name="messages"
+    )
+
+    def get_absolute_url(self):
+        return reverse("message_detail", kwargs={"pk": self.pk})
+
+    def __str__(self):
+        return self.text
 
 
 class Group(models.Model):
-    title = models.CharField(max_length=50,
-                             blank=False,
-                             unique=True,
-                             verbose_name='Group name')
+    title = models.CharField(
+        max_length=50,
+        blank=False,
+        unique=True,
+        verbose_name='Group name'
+    )
+    accounts_want_to_subscribe = models.ManyToManyField(
+        Account,
+        blank=True,
+        related_name="subscribe_requested_groups"
+    )
+    account_owner = models.ForeignKey(
+        Account,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="own_groups"
+    )
+
+    def get_delete_url(self):
+        return reverse("delete_group", kwargs={"pk": self.pk})
+
+    def get_leave_url(self):
+        return reverse("leave_group", kwargs={"pk": self.pk})
 
     def __str__(self):
         return self.title
@@ -69,4 +117,4 @@ class Tag(models.Model):
         return f'{self.title}'
 
     def get_absolute_url(self):
-        return reverse("get_todoitems", kwargs={"tag": self.title})
+        return reverse("get_todoitems_by_tag", kwargs={"tag": self.title})

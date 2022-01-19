@@ -1,0 +1,17 @@
+{% extends "todo_app/base.html" %}
+{% load static %}
+
+{% block content %}
+    {% for group in groups %}
+        {% with "todo_app/includes/"|add:include_template|add:".html" as group_template %}
+            {% include group_template %}
+        {% endwith %}
+    {% endfor %}
+
+    {% include "todo_app/includes/modal.html" %}
+
+    <script src="{% static 'js/groups.js' %}"></script>
+    <script src="{% static 'js/create_xhr.js' %}"></script>
+    <script src="{% static 'js/modal.js' %}"></script>
+
+{% endblock %}

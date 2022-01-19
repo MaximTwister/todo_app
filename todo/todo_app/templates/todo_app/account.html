@@ -1,0 +1,23 @@
+{% extends "todo_app/base.html" %}
+{% load static %}
+
+{% block title %}{{ user.username }} Profile{% endblock title %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            {% include "todo_app/includes/account_messages.html" %}
+            {% include "todo_app/includes/messages.html" %}
+            {% if submitted %}
+                <p class="success">Your info was submitted successfully. Thank you.</p>
+            {% else %}
+                {% include "todo_app/includes/regular_table_form.html" %}
+            {% endif %}
+        </div>
+        <div class="col-3"></div>
+    </div>
+
+
+{% endblock %}

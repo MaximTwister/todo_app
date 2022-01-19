@@ -5,7 +5,9 @@
     <div class="col-6 main">
         <div class="card text-center">
           <div class="card-header">
-              {{ todoitem.assignee.name }}
+              <div>Created by: {{ todoitem.owner.username }}</div>
+              <div>Assigned to: {{ todoitem.assignee.username }}</div>
+              <div>Group: {{ todoitem.group }}</div>
           </div>
           <div class="card-body">
             <h5 class="card-title">{{ todoitem.title|title }}</h5>
