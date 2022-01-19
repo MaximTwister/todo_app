@@ -1,5 +1,6 @@
 .main {
     margin-bottom: 10px !important;
+    margin-top: 5px !important;
 }
 
 .b1 {
@@ -25,7 +26,6 @@
 .title_paragraph {
     margin-bottom: 0;
 }
-
 
 body{background:url(https://bootstraptema.ru/images/bg/bg-3.png)}
 .btn{

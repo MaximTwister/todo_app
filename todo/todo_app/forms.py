@@ -11,6 +11,7 @@ class TagForm(ModelForm):
     class Meta:
         model = Tag
         fields = ['title']
+        widgets = {'title': forms.Textarea(attrs={'rows': 1, 'cols': 36})}
 
 
 class AccountForm(ModelForm):
@@ -57,8 +58,8 @@ class TodoItemForm(ModelForm):
         fields = ['title', 'content', 'assignee', 'group', 'tags']
         widgets = {
             'tags': forms.SelectMultiple(attrs={'class': 'tag_widget'}),
-            'title': forms.Textarea(attrs={'rows': 2}),
-            'content': forms.Textarea
+            'title': forms.Textarea(attrs={'rows': 1, 'cols': 36}),
+            'content': forms.Textarea(attrs={'rows': 4, 'cols': 36})
         }
         field_classes = {'assignee': CustomChoiceField}
         title = forms.CharField()
@@ -71,6 +72,7 @@ class GroupForm(ModelForm):
         model = Group
         fields = ['title']
         title = forms.CharField(max_length=255)
+        widgets = {'title': forms.Textarea(attrs={'rows': 1, 'cols': 36})}
 
 
 class TodoUserForm(UserCreationForm):

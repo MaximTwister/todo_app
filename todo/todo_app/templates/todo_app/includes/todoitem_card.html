@@ -1,28 +1,24 @@
-<div class="container">
-  <div class="row">
-    <div class="col-3">
-    </div>
-    <div class="col-6 main">
-        <div class="card text-center">
-          <div class="card-header">
-              <div>Created by: {{ todoitem.owner.username }}</div>
-              <div>Assigned to: {{ todoitem.assignee.username }}</div>
-              <div>Group: {{ todoitem.group }}</div>
-          </div>
-          <div class="card-body">
-            <h5 class="card-title">{{ todoitem.title|title }}</h5>
-            <p class="card-text">{{ todoitem.content|truncatewords:15 }}</p>
-            <a href="{{ todoitem.get_absolute_url }}" class="btn btn-primary">Read Full</a>
-          </div>
-          <div class="card-footer text-muted">
-              {% for tag in todoitem.tags.all %}
-{#                <a href="{% url 'get_todoitems' tag=tag %}">#{{ tag }}</a>#}
-                  <a href="{{ tag.get_absolute_url }}">#{{ tag }}</a>
-              {% endfor %}
-          </div>
+<div class="row">
+    <div class="col-3"></div>
+        <div class="col-6">
+            <div class="card text-center main">
+                <div class="card-header">
+                    <div>Created by: {{ todoitem.owner.username }}</div>
+                    <div>Assigned to: {{ todoitem.assignee.username }}</div>
+                    <div>Group: {{ todoitem.group }}</div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ todoitem.title|title }}</h5>
+                    <p class="card-text">{{ todoitem.content|truncatewords:15 }}</p>
+                    <a href="{{ todoitem.get_absolute_url }}" class="btn btn-primary">Read Full</a>
+                </div>
+                <div class="card-footer text-muted">
+                    {% for tag in todoitem.tags.all %}
+                        {#<a href="{% url 'get_todoitems' tag=tag %}">#{{ tag }}</a>#}
+                        <a href="{{ tag.get_absolute_url }}">#{{ tag }}</a>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="col-3">
-    </div>
-  </div>
+    <div class="col-3"></div>
 </div>
