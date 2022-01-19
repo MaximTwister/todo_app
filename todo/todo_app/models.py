@@ -83,7 +83,7 @@ class Group(models.Model):
         max_length=50,
         blank=False,
         unique=True,
-        verbose_name='Group name'
+        verbose_name='Group'
     )
     accounts_want_to_subscribe = models.ManyToManyField(
         Account,
@@ -111,7 +111,7 @@ class Group(models.Model):
 class Tag(models.Model):
     title = models.CharField(max_length=100,
                              blank=False,
-                             verbose_name='Tag name')
+                             verbose_name='Tag')
 
     def __str__(self):
         return f'{self.title}'

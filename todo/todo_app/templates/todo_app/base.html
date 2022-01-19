@@ -4,94 +4,70 @@
 <html lang="en">
 <head>
     <style>
-
-
-
- .list {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row wrap;
-  flex-flow: row wrap;
-   padding: 20px;
-
-}
-
- .item  {
-  padding: 0.1rem;
-  text-align: center;
-
-}
-
-
- .input_form  {
- display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row wrap;
-  flex-flow: row wrap;
-  border: none;
-
-}
-
-
- .selected_tag  {
-  padding: 0.1rem;
-  text-align: center;
-}
-
- .selected_option  {
-  padding: 0.1rem;
-  text-align: center;
-
-}
-
-
-
- .item a {
-  display: block;
-  background-color: #88D498;
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 3px;
-  color: #fff;
-
-}
-
-  .selected_tag a {
-  display: block;
-  background-color: #1d8fe0;
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 3px;
-  color: #fff;
-}
-
-  .selected_option a {
-  display: block;
-  background-color: #449455;
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 3px;
-  color: #fff;
-
-}
-
-
-  .remove-button {
-  background-color: #1d8fe0;
-  color: white;
-  text-decoration: none;
-  border: none;
-    }
-
-  body {
-  font: 300 24px/1.5 sans-serif;
-  background-color: white;
-  padding-left: 25%;
-  padding-right: 25%;
-  padding-top:50px;
-
-}
-</style>
+        .list {
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-flow: row wrap;
+            flex-flow: row wrap;
+            padding: 20px;
+        }
+        .item {
+            padding: 0.1rem;
+            text-align: center;
+        }
+        .input_form {
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-flow: row wrap;
+            flex-flow: row wrap;
+            border: none;
+        }
+        .selected_tag {
+            padding: 0.1rem;
+            text-align: center;
+        }
+        .selected_option {
+            padding: 0.1rem;
+            text-align: center;
+        }
+        .item a {
+            display: block;
+            background-color: #88D498;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 3px;
+            color: #fff;
+        }
+        .selected_tag a {
+            display: block;
+            background-color: #1d8fe0;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 3px;
+            color: #fff;
+        }
+        .selected_option a {
+            display: block;
+            background-color: #449455;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 3px;
+            color: #fff;
+        }
+        .remove-button {
+            background-color: #1d8fe0;
+            color: white;
+            text-decoration: none;
+            border: none;
+        }
+        body {
+            font: 300 24px/1.5 sans-serif;
+            background-color: white;
+            padding-left: 25%;
+            padding-right: 25%;
+            padding-top:50px;
+        }
+    </style>
 
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
@@ -102,6 +78,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
     <title>{{ title }}</title>
 </head>
+
 <body>
 
 {% include "todo_app/includes/navbar.html" %}
