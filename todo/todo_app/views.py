@@ -259,7 +259,7 @@ class GroupView(LoginRequiredMixin, FormView):
     template_name = 'todo_app/post_base.html'
     form_class = GroupForm
     login_url = reverse_lazy("log_in")
-    success_url = reverse_lazy("get_groups", kwargs={'group_type': "owned_groups"})
+    success_url = reverse_lazy("get_groups", kwargs={'group_type': "owned-groups"})
 
     def form_valid(self, form):
         group: Group = form.save(commit=False)
