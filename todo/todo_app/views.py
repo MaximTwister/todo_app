@@ -160,6 +160,12 @@ class TodoItemsList(LoginRequiredMixin, ListView):
     template_name = "todo_app/todoitems.html"
     context_object_name = "todoitems"
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        account = self.request.user.account
+        context["groups"] = account.subscribed_groups.all()
+        return context
+
     def get_queryset(self):
         filter_kwargs = {}
         todo_type = self.kwargs.get("todo_type")

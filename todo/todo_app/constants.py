@@ -6,7 +6,11 @@ all_tags = [
     "webserver", "backend", "frontend",
 ]
 
-groups = ("Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel",)
+groups = ("Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel",
+          "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa",
+          "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray",
+          "Yankee", "Zulu"
+          )
 
 # os = ["ubuntu", "windows", "vmware", "vsphere", "redhat", "debian"]
 # severity = ["warning", "bug", "degradation", "error", "critical"]

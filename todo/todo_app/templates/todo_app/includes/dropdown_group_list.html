@@ -1,0 +1,11 @@
+<div class="form-group">
+  <label for="select_group" class="col-sm-2 control-label">Group Filter</label>
+  <div class="col-sm-10">
+    <select id="select_group" name="select_group" class="form-control">
+      <option value="" selected>All Groups</option>
+      {% for group in groups %}
+        <option id="{{ group.pk }}" value="{{ group.pk }}">{{ group}}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
