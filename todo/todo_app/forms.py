@@ -25,7 +25,7 @@ class AccountForm(ModelForm):
 
     def clean_telegram_id(self):
         telegram_id = self.cleaned_data.get('telegram_id')
-        if len(str(telegram_id)) != 10:
+        if len(str(telegram_id)) in range(9, 11):
             raise forms.ValidationError('not valid telegram id', code='invalid')
 
         # Must always return data

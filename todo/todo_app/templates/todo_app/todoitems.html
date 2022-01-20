@@ -5,8 +5,14 @@
 
     {% include "todo_app/includes/dropdown_group_list.html" %}
 
+    <div id="div-empty-title">
+        <p id="paragraph-empty-title"></p>
+    </div>
+
     {% for todoitem in todoitems %}
         {% include "todo_app/includes/todoitem_card.html" %}
     {% endfor %}
+
+    <script src="{% static 'js/group_dropdown.js' %}"></script>
 
 {% endblock %}
