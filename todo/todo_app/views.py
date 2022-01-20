@@ -99,7 +99,7 @@ class GroupDetail(LoginRequiredMixin, DetailView):
 
         return redirect(reverse_lazy(
             "get_groups",
-            kwargs={"group_type": "subscribed_groups"}
+            kwargs={"group_type": "subscribed-groups"}
         ))
 
     def patch(self, request, *args, **kwargs):
@@ -116,7 +116,7 @@ class GroupDetail(LoginRequiredMixin, DetailView):
             method(account, group)
             return redirect(reverse_lazy(
                 "get_groups",
-                kwargs={'group_type': "owned_groups"}))
+                kwargs={'group_type': "owned-groups"}))
 
         else:
             return JsonResponse(data={"error": "not Supported method or content-type"},
@@ -126,7 +126,7 @@ class GroupDetail(LoginRequiredMixin, DetailView):
 class GroupDelete(LoginRequiredMixin, DeleteView):
     model = Group
     login_url = reverse_lazy("log_in")
-    success_url = reverse_lazy("get_groups", kwargs={"group_type": "owned_groups"})
+    success_url = reverse_lazy("get_groups", kwargs={"group_type": "owned-groups"})
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
