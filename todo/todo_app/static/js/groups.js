@@ -17,7 +17,7 @@ function toggleSubscribers(event, id) {
 function editGroupSubscribers(group_pk, account_pk, type) {
     console.log(`${type} account: ${account_pk} group: ${group_pk}`)
 
-    let url = `./${group_pk}/update/`
+    let url = `http://127.0.0.1:8000/todo/groups/${group_pk}/update/`
     let method = "PATCH"
     let csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value
     let data = JSON.stringify({
@@ -31,7 +31,7 @@ function editGroupSubscribers(group_pk, account_pk, type) {
 
 function request_delete_object(event){
     let group_id = event.target.getAttribute("object_id")
-    let url = `./${group_id}/delete/`
+    let url = `http://127.0.0.1:8000/todo/groups/${group_id}/delete/`
     let method = "POST"
     let csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value
     const xhr = createXHR(url, csrftoken, method)
