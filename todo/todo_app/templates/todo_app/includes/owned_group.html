@@ -1,56 +1,79 @@
-<div class="card">
-  <div class="card-header">
-      {{ group }}
-  </div>
-  <div class="card-body" id="group_{{ forloop.counter }}">
-    {% csrf_token %}
-    <h5 class="card-title">Handle join requests and manage your group.</h5>
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+        <div class="card text-center main">
+            <div class="card-header">
+                <b>{{ group }}</b>
+            </div>
+            <div class="card-body" id="group_{{ forloop.counter }}">
+                {% csrf_token %}
+                <h5 class="card-title">Handle join requests and manage your group.</h5>
 
-      <button type="button"
-              class="btn btn-primary position-relative"
-              onClick="toggleRequests(event, {{ forloop.counter }})">
-          Requests to join
-          {% if group.accounts_want_to_subscribe.all %}
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
-              {{ group.accounts_want_to_subscribe.all|length }}
-          </span>
-          {% endif %}
-      </button>
+                <button type="button"
+                        class="btn btn-primary btn-sm position-relative"
+                        style="margin: 10px 11px 10px 11px;"
+                        onClick="toggleRequests(event, {{ forloop.counter }})">
+                    Requests to join
+                    {% if group.accounts_want_to_subscribe.all %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                            {{ group.accounts_want_to_subscribe.all|length }}
+                        </span>
+                    {% endif %}
+                </button>
 
-      <button type="button"
-              class="btn btn-primary position-relative"
-              onClick="toggleSubscribers(event, {{ forloop.counter }})">
-          Subscribers
-      </button>
+                <button type="button"
+                        class="btn btn-primary btn-sm position-relative"
+                        style="margin: 10px 11px 10px 11px;"
+                        onClick="toggleSubscribers(event, {{ forloop.counter }})">
+                    Subscribers
+                </button>
 
-      <button type="button"
-              class="btn btn-primary position-relative"
-              id="delete"
-              onClick="openModal('group', 'delete', {{ group.pk }})">
-          Delete Group
-      </button>
+                <button type="button"
+                        class="btn btn-warning btn-sm position-relative"
+                        style="margin: 10px 11px 10px 11px;"
+                        id="delete"
+                        onClick="openModal('group', 'delete', {{ group.pk }})">
+                    Delete
+                </button>
 
-    <div class="hide_requests_block" id="requests_block_{{ forloop.counter }}">
-        <p>Subscribe Requests:</p>
-        {% for account in group.accounts_want_to_subscribe.all %}
-            {{ account.usr.username }}
-            <button onClick="editGroupSubscribers({{ group.pk }}, {{ account.pk }}, 'add')">
-                Add to group
-            </button>
-            <button onClick="editGroupSubscribers({{ group.pk }}, {{ account.pk }}, 'reject')">
-                Reject
-            </button>
-        {% endfor %}
+                <div class="hide_requests_block text-center"
+                     id="requests_block_{{ forloop.counter }}"
+                     style="margin: 5px;">
+                    <p>Subscribe Requests:</p>
+                    {% for account in group.accounts_want_to_subscribe.all %}
+                        <div class="text-right" style="margin: 0 80px 0 0;">
+                            {{ account.usr.username }}:
+                            <button type="button"
+                                    class="btn btn-success btn-xs position-relative"
+                                    style="margin: 10px 5px 10px 10px;"
+                                    onClick="editGroupSubscribers({{ group.pk }}, {{ account.pk }}, 'add')">
+                                Add to group
+                            </button>
+                            <button type="button"
+                                    class="btn btn-warning btn-xs position-relative"
+                                    style="margin: 10px 5px 10px 5px;"
+                                    onClick="editGroupSubscribers({{ group.pk }}, {{ account.pk }}, 'reject')">
+                                Reject
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="hide_subscribers_block text-center" id="subscribers_block_{{ forloop.counter }}">
+                    <p>Group Subscribers:</p>
+                    {% for account in group.subscribed_accounts.all %}
+                        <div class="text-right" style="margin: 0 80px 0 0;">
+                            {{ account.usr.username }}:
+                            <button type="button"
+                                    class="btn btn-warning btn-xs position-relative"
+                                    style="margin: 10px 10px 10px 10px;"
+                                    onClick="editGroupSubscribers({{ group.pk }}, {{ account.pk }}, 'del')">
+                                Delete from Group
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="hide_subscribers_block" id="subscribers_block_{{ forloop.counter }}">
-        <p>Group Subscribers:</p>
-        {% for account in group.subscribed_accounts.all %}
-            {{ account.usr.username }}
-            <button onClick="editGroupSubscribers({{ group.pk }}, {{ account.pk }}, 'del')">
-                Delete from Group
-            </button>
-        {% endfor %}
-    </div>
-  </div>
+    <div class="col-2"></div>
 </div>

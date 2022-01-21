@@ -2,24 +2,28 @@
 
 {% block content %}
 
-    {% include "todo_app/includes/messages.html" %}
-
-    <div class="container">
-        <h1>Login</h1>
-         <!-- TODO Artem: Make form NICE-->
-        <form method="POST">
-            {% csrf_token %}
-            {{ login_form }}
-            <button class="btn btn-primary" type="submit">
-                Login
-            </button>
-        </form>
-
-        <p class="text-center">
-            If you don't have an account,
-            <a href="{% url 'register' %}">Sign Up</a>
-            instead
-        </p>
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            {% include "todo_app/includes/messages.html" %}
+            <div class="card border-primary mb-3 text-center">
+                <div class="card-header text-center">
+                    <h3 class="card-title-center"><b>Login</b></h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ login_form }}
+                        <button class="btn btn-primary" style="margin: 10px 0 10px 10px" type="submit">
+                            Login
+                        </button>
+                    </form>
+                    <p class="text-center">
+                        If you don't have an account, <a href="{% url 'register' %}">Sign Up</a> instead
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3"></div>
     </div>
-
 {% endblock %}

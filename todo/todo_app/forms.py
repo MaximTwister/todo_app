@@ -20,7 +20,7 @@ class AccountForm(ModelForm):
 
     class Meta:
         model = Account
-        fields = ['telegram_id']
+        fields = ['telegram_id', 'request_join_group']
         # widgets = {'account_groups': forms.Select}
 
     def clean_telegram_id(self):

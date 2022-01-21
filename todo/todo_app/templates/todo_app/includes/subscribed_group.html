@@ -1,6 +1,16 @@
-<div class="card-body">
-    <h5 class="card-title">{{ group }}</h5>
-    <a href="{{ group.get_leave_url }}" class="btn btn-success">
-        Leave Group
-    </a>
+<div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+        <div class="card border-primary mb-3 text-center">
+            <div class="card-header text-center">
+                <h4 class="card-title-center">{{ group }}</h4>
+            </div>
+            <div class="card-body text-primary">
+                <a href="{{ group.get_leave_url }}" class="btn btn-success">
+                    Leave Group
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-4"></div>
 </div>

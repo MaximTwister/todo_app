@@ -1,25 +1,30 @@
 {% extends "todo_app/base.html" %}
 
 {% block content %}
-
-    {% include "todo_app/includes/messages.html" %}
-
-    <div class="container">
-        <h1>Registration</h1>
-         <!-- TODO Artem: Make form NICE-->
-        <form method="POST">
-            {% csrf_token %}
-            {{ register_form }}
-            <button class="btn btn-primary" type="submit">
-                Register
-            </button>
-        </form>
-
-        <p class="text-center">
-            If you already have an account,
-            <a href="{% url 'log_in' %}">Login</a>
-            instead
-        </p>
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+            {% include "todo_app/includes/messages.html" %}
+            <div class="card border-primary mb-3">
+                <div class="card-header text-center">
+                    <h3 class="card-title-center"><b>Registration</b></h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ register_form }}
+                        <div class="text-center">
+                            <button class="btn btn-primary text-center" style="margin: 10px 20px 10px 10px" type="submit">
+                                Register
+                            </button>
+                        </div>
+                    </form>
+                    <p class="text-center">
+                        If you already have an account, <a href="{% url 'log_in' %}">Login</a> instead
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-2"></div>
     </div>
-
 {% endblock %}
