@@ -3,6 +3,9 @@
         <div class="col-6">
             <div class="card text-center main">
                 <div class="card-header">
+                    {% with dt=todoitem.creation_date %}
+                        <div>Created at: {{ dt|date:"d M Y" }} {{ dt|date:"H:i" }}</div>
+                    {% endwith %}
                     <div>Created by: {{ todoitem.owner.username }}</div>
                     <div>Assigned to: {{ todoitem.assignee.username }}</div>
                     <div>Group: {{ todoitem.group }}</div>

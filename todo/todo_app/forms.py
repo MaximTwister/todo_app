@@ -47,9 +47,10 @@ class TodoItemForm(ModelForm):
             assignee = User.objects.filter(
                 Q(account__subscribed_groups__in=user_groups_ids) &
                 ~Q(pk=user.pk)
-            )
-            print(f"USER: {user} have groups: {user_groups}")
-            print(f"Assignees: {assignee}")
+            ).distinct()
+            # assignee = User.objects.filter(username="")
+            print(f"[{user}] Available groups for todo form : {user_groups}")
+            print(f"[{user}] Available assignees for todo form: {assignee}")
             self.fields['group'].queryset = user_groups
             self.fields['assignee'].queryset = assignee
 

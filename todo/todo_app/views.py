@@ -171,17 +171,20 @@ class TodoItemsList(LoginRequiredMixin, ListView):
         todo_type = self.kwargs.get("todo_type")
         tag = self.kwargs.get("tag")
         account = self.request.user.account
-        if todo_type == TODO_TYPE_ALL:
+
+        if todo_type in [TODO_TYPE_ALL, None]:
             owned_and_subscribed_groups = Group.objects.filter(
                 Q(account_owner=account) |
                 Q(subscribed_accounts__in=[account])
             )
             filter_kwargs["group__in"] = owned_and_subscribed_groups
-        else:
+        elif todo_type in [TODO_TYPE_OWNER, TODO_TYPE_ASSIGNEE]:
             filter_kwargs[todo_type] = self.request.user
+
         if tag:
             tag = Tag.objects.get(title=tag)
             filter_kwargs['tags'] = tag
+
         print(filter_kwargs)
         qs = super().get_queryset()
         return qs.filter(**filter_kwargs)
@@ -295,9 +298,17 @@ class CreateTodoItemView(LoginRequiredMixin, FormView):
         return kwargs
 
     def form_valid(self, form):
+        print("Todo form is valid")
+        todo_owner = self.request.user
         todo: TodoItem = form.save(commit=False)
-        todo.owner = self.request.user
+        todo.owner = todo_owner
         todo.save()
+        print("Todo form is saved")
+        Message.objects.create(
+            text=f"{todo_owner} assigned new todo for you.",
+            account=todo.assignee.account
+        )
+        print("Message to assignee was send")
         return super().form_valid(form)
 
 
@@ -332,6 +343,25 @@ def post_form(request, item):
 
     context = {'form': form, 'submitted': submitted, 'title': title, 'tags': tags}
     return render(request, 'todo_app/post_base.html', context=context)
+
+
+def get_assignees_by_group(request):
+    if request.method == "PATCH":
+        content_type = request.META.get("CONTENT_TYPE")
+        if content_type == "application/json":
+            account = request.user.account
+            print(f"INFO: {request.body}")
+            print(f"Account: {account}")
+            body = json.loads(request.body)
+            group_pk = body.get("group_pk")
+            group: Group = Group.objects.get(pk=group_pk)
+            assignees = group.subscribed_accounts.filter(~Q(pk=account.pk))
+            assignees = {acc.usr.pk: acc.usr.username for acc in assignees}
+            print(f"Assignees by group:{group} : {assignees}")
+            return JsonResponse({"assignees": assignees}, status=200)
+        else:
+            return JsonResponse(data={"error": "Not Supported Method or ContentType"},
+                                status=405)
 
 
 def register(request):
