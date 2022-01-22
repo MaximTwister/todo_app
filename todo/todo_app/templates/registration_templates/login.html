@@ -10,17 +10,17 @@
                 <div class="card-header text-center">
                     <h3 class="card-title-center"><b>Login</b></h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="display: -webkit-flex">
                     <form method="POST">
                         {% csrf_token %}
                         {{ login_form }}
                         <button class="btn btn-primary" style="margin: 10px 0 10px 10px" type="submit">
                             Login
                         </button>
+                        <p class="text-center">
+                            If you don't have an account, <a href="{% url 'register' %}">Sign Up</a> instead
+                        </p>
                     </form>
-                    <p class="text-center">
-                        If you don't have an account, <a href="{% url 'register' %}">Sign Up</a> instead
-                    </p>
                 </div>
             </div>
         </div>
