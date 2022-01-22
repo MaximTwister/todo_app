@@ -1,5 +1,7 @@
 import json
 
+import logging
+
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -43,6 +45,7 @@ TODO_TYPE_ASSIGNEE = "assignee"
 GROUP_TYPE_OWNED = "owned-groups"
 GROUP_TYPE_SUBSCRIBER = "subscribed-groups"
 
+LOG = logging.getLogger('todo')
 
 class TodoDetail(LoginRequiredMixin, DetailView):
     model = TodoItem
@@ -215,7 +218,7 @@ class GroupsList(LoginRequiredMixin, ListView):
             ]
         }
         filter_kwargs, self.include_template = group_type__options_map[group_type]
-        print(f"Filter kwargs GroupList {filter_kwargs}")
+        LOG.debug(f"Filter kwargs GroupList {filter_kwargs}")
         qs = super().get_queryset()
         print(f"Groups QuerySet: {qs}")
         return qs.filter(**filter_kwargs)
