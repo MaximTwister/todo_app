@@ -27,9 +27,15 @@
         <li class="nav-item">
             <a class="nav-link" href="{% url 'account' slug=user.get_username %}">
                 <em class="fas fa-user-circle"></em>
+                {% if user.account.messages.all %}
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger ">
+                            {{ user.account.messages.all.all|length }}
+                        </span>
+                    {% endif %}
             </a>
+
         </li>
-        <li class="nav-item">
+        <li class="nav-item" style="margin:">
             <a class="nav-link" href="{% url 'log_out' %}">
                 Logout
             </a>
