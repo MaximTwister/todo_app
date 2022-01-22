@@ -9,7 +9,7 @@
                 <div class="card-header text-center">
                     <h3 class="card-title-center"><b>Registration</b></h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="display: -webkit-flex">
                     <form method="POST">
                         {% csrf_token %}
                         {{ register_form }}
@@ -18,10 +18,11 @@
                                 Register
                             </button>
                         </div>
+                        <p class="text-center">
+                            If you already have an account, <a href="{% url 'log_in' %}">Login</a> instead
+                        </p>
                     </form>
-                    <p class="text-center">
-                        If you already have an account, <a href="{% url 'log_in' %}">Login</a> instead
-                    </p>
+
                 </div>
             </div>
         </div>
