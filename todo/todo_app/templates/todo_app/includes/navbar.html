@@ -1,4 +1,5 @@
 {% load static %}
+{% load todo_filters %}
 
 <ul class="nav justify-content-center nav-pills main">
     <li class="nav-item dropdown">
@@ -27,9 +28,9 @@
         <li class="nav-item">
             <a class="nav-link" href="{% url 'account' slug=user.get_username %}">
                 <em class="fas fa-user-circle"></em>
-                {% if user.account.messages.all %}
+                {% if user.account.messages|get_unread_messages_num %}
                         <span class="position-absolute top-0 translate-middle badge rounded-pill bg-danger ">
-                            {{ user.account.messages.all.all|length }}
+                            {{ user.account.messages|get_unread_messages_num }}
                         </span>
                     {% endif %}
             </a>
