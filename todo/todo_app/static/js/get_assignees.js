@@ -10,7 +10,7 @@ group_selector.addEventListener("change",  (event) => {
 })
 
 function getAssignees(selectedGroupPK) {
-    let url = `http://127.0.0.1:8000/todo/get-assignees/`
+    let url = `../../get-assignees/`
     let method = "PATCH"
     let csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value
     let data = JSON.stringify({
