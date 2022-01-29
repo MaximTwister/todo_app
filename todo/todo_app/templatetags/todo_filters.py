@@ -7,5 +7,5 @@ register = template.Library()
 
 @register.filter
 def get_unread_messages_num(account_messages: Message.objects):
-    """Get an amount of unacknowledged messages"""
+    """Get an amount of account unacknowledged messages"""
     return len(account_messages.filter(acknowledged=False))
